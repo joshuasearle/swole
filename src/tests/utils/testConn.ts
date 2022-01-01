@@ -5,13 +5,13 @@ dotenv.config()
 
 const testTypeormConfig: ConnectionOptions = {
   type: "postgres",
-  host: "localhost",
-  port: 5432,
-  username: "postgres",
-  password: "postgres",
-  database: "swole_testing",
+  host: process.env["DB_HOST"],
+  port: +process.env["DB_PORT"]!,
+  username: process.env["DB_USERNAME"],
+  password: process.env["DB_PASSWORD"],
+  database: process.env["DB_TEST_NAME"],
   synchronize: true,
-  entities: [__dirname + "/../../**/*.entity.ts"],
+  entities: [__dirname + "/../**/*.entity.ts"],
 }
 
 export const testConn = (drop: boolean = false) => {
