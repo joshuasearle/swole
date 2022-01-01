@@ -11,7 +11,7 @@ const testTypeormConfig: ConnectionOptions = {
   password: process.env["DB_PASSWORD"],
   database: process.env["DB_TEST_NAME"],
   synchronize: true,
-  entities: [__dirname + "/../**/*.entity.ts"],
+  entities: [__dirname + "/../../**/*.entity.ts"],
 }
 
 export const testConn = (drop: boolean = false) => {
