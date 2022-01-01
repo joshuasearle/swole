@@ -6,7 +6,7 @@ dotenv.config()
 const testTypeormConfig: ConnectionOptions = {
   type: "postgres",
   host: "localhost",
-  port: 5432,
+  port: 5431,
   username: "postgres",
   password: "postgres",
   database: "swole_testing",
