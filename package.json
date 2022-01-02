@@ -31,7 +31,7 @@
     "@types/faker": "^5.5.9",
     "@types/ioredis": "^4.28.5",
     "@types/jest": "^27.0.3",
-    "@types/node": "^17.0.1",
+    "@types/node": "^17.0.6",
     "@types/uuid": "^8.3.3",
     "faker": "^5.5.3",
     "jest": "^27.4.5",
