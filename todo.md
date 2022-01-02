@@ -11,11 +11,5 @@
 
 - Add kg vs lb
 
-- Delete user mutation
-
 - Testing login and logout sessions
   - Not sure how to do it
-
-- set resolvers
-
-- test for deleting exercise with workoutExercises connected

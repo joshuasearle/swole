@@ -9,13 +9,3 @@ export class NotLoggedIn {
   @Field(() => String)
   message: string
 }
-
-@ObjectType()
-export class Unauthorized {
-  constructor() {
-    this.message = "You do not have access to this resource"
-  }
-
-  @Field(() => String)
-  message: string
-}

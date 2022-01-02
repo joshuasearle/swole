@@ -21,7 +21,7 @@ import RemoveExerciseFromWorkoutResult, {
   ExerciseNotInWorkout,
   RemoveExerciseFromWorkoutSuccess,
 } from "../typedefs/RemoveExerciseFromWorkoutResult"
-import { Unauthorized } from "../typedefs/shared"
+import { NotLoggedIn } from "../typedefs/shared"
 import { Context } from "../types/Context"
 import { validateRepsSets } from "./helpers/repSetValidation"
 
@@ -38,7 +38,7 @@ export class WorkoutExerciseResolver {
   ): Promise<typeof AddExerciseToWorkoutResult> {
     const user = ctx.req.session.user
 
-    if (!user) return new Unauthorized()
+    if (!user) return new NotLoggedIn()
 
     const [exercise, workout] = await Promise.all([
       Exercise.findOne({ where: { id: exerciseId, user } }),
@@ -76,13 +76,13 @@ export class WorkoutExerciseResolver {
     @Ctx() ctx: Context,
     @Arg("exerciseId", () => ID) exerciseId: string,
     @Arg("workoutId", () => ID) workoutId: string,
-    @Arg("sets", () => Int) sets: number,
-    @Arg("minReps", () => Int) minReps: number,
-    @Arg("maxReps", () => Int) maxReps: number
+    @Arg("sets", () => Int, { nullable: true }) sets: number,
+    @Arg("minReps", () => Int, { nullable: true }) minReps: number,
+    @Arg("maxReps", () => Int, { nullable: true }) maxReps: number
   ): Promise<typeof ChangeExerciseInWorkoutResult> {
     const user = ctx.req.session.user
 
-    if (!user) return new Unauthorized()
+    if (!user) return new NotLoggedIn()
 
     const [exercise, workout] = await Promise.all([
       Exercise.findOne({ where: { id: exerciseId, user } }),

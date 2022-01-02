@@ -1,6 +1,6 @@
 import { createUnionType, Field, ObjectType } from "type-graphql"
 import { WorkoutExercise } from "../entities/WorkoutExercise.entity"
-import { Unauthorized } from "./shared"
+import { NotLoggedIn } from "./shared"
 
 @ObjectType()
 export class DuplicateWorkoutExercise {
@@ -40,7 +40,7 @@ const AddExerciseToWorkoutResult = createUnionType({
   name: "AddExerciseToWorkoutResult",
   types: () => [
     WorkoutExercise,
-    Unauthorized,
+    NotLoggedIn,
     DuplicateWorkoutExercise,
     InvalidSetAmount,
     InvalidRepAmount,

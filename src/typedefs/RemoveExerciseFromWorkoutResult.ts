@@ -3,7 +3,7 @@ import { Exercise } from "../entities/Exercise.entity"
 import { Workout } from "../entities/Workout.entity"
 import { ExerciseDoesNotExist } from "./DeleteExerciseResult"
 import { WorkoutDoesNotExist } from "./DeleteWorkoutResults"
-import { Unauthorized } from "./shared"
+import { NotLoggedIn } from "./shared"
 
 @ObjectType()
 export class ExerciseNotInWorkout {
@@ -33,7 +33,7 @@ const RemoveExerciseFromWorkoutResult = createUnionType({
   name: "RemoveExerciseFromWorkoutResult",
   types: () => [
     RemoveExerciseFromWorkoutSuccess,
-    Unauthorized,
+    NotLoggedIn,
     ExerciseDoesNotExist,
     WorkoutDoesNotExist,
     ExerciseNotInWorkout,

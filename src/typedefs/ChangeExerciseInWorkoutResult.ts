@@ -7,13 +7,13 @@ import {
 import { ExerciseDoesNotExist } from "./DeleteExerciseResult"
 import { WorkoutDoesNotExist } from "./DeleteWorkoutResults"
 import { ExerciseNotInWorkout } from "./RemoveExerciseFromWorkoutResult"
-import { Unauthorized } from "./shared"
+import { NotLoggedIn } from "./shared"
 
 const ChangeExerciseInWorkoutResult = createUnionType({
   name: "ChangeExerciseInWorkoutResult",
   types: () => [
     WorkoutExercise,
-    Unauthorized,
+    NotLoggedIn,
     ExerciseDoesNotExist,
     WorkoutDoesNotExist,
     InvalidSetAmount,
