@@ -49,26 +49,3 @@ jobs:
           DB_USERNAME: postgres
           DB_PASSWORD: postgres
           DB_TEST_NAME: swole_testing
-
-      - name: Copy schema file
-        run: cd server && yarn schema
-
-      - name: Commit files
-        id: commit
-        run: |
-          git config --local user.email "action@github.com"
-          git config --local user.name "github-actions"
-          git add --all
-          if [-z "$(git status --porcelain)"]; then
-            echo "::set-output name=push::false"
-          else
-            git commit -m "Add changes" -a
-            echo "::set-output name=push::true"
-          fi
-        shell: bash
-
-      - name: Push changes
-        if: steps.commit.outputs.push == 'true'
-        uses: ad-m/github-push-action@master
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
