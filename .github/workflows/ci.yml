@@ -42,7 +42,7 @@ jobs:
         run: cd server && yarn install --frozen-lockfile
 
       - name: Run tests
-        run: yarn test
+        run: cd server && yarn test
         env:
           DB_HOST: localhost
           DB_PORT: 5432
