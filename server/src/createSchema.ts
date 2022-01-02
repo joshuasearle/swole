@@ -9,5 +9,4 @@ export const createSchema = () =>
       const user = req.session.user
       return !!user
     },
-    emitSchemaFile: true,
   })
