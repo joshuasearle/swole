@@ -30,7 +30,7 @@ jobs:
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "github-actions"
-          git commit -m "Copy schema file" -a
+          (git commit -m "Copy schema file" -a) || true
 
       - name: Push changes
         uses: ad-m/github-push-action@master
