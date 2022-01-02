@@ -1,5 +1,5 @@
-import { createSchema } from "./createSchema"
 import { graphqlHTTP } from "express-graphql"
+import { createSchema } from "./createSchema"
 
 const getGraphqlHandler = async () => {
   const schema = await createSchema()
