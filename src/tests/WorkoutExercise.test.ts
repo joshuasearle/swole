@@ -52,7 +52,7 @@ const addExerciseToWorkoutMutation = `
 `
 
 const changeExerciseInWorkout = `
-  mutation ChangeExerciseInWorkout($exerciseId: ID!, $workoutId: ID!, $maxReps: Int!, $minReps: Int!, $sets: Int!) {
+  mutation ChangeExerciseInWorkout($exerciseId: ID!, $workoutId: ID!, $maxReps: Int, $minReps: Int, $sets: Int) {
     changeExerciseInWorkout(exerciseId: $exerciseId, workoutId: $workoutId, maxReps: $maxReps, minReps: $minReps, sets: $sets) {
       __typename
     }
@@ -223,6 +223,31 @@ describe("WorkoutExercise", () => {
 
     expect(dbEntity).toBeDefined()
     expect(dbEntity?.sets).toBe(4)
+  })
+
+  it("change exercise in workout with one prop", async () => {
+    const result = await gCall({
+      source: changeExerciseInWorkout,
+      variableValues: {
+        exerciseId: exercise.id,
+        workoutId: workout.id,
+        maxReps: 15, // different
+      },
+      user,
+    })
+
+    const data = result.data?.["changeExerciseInWorkout"]
+
+    expect(data.__typename).toBe("WorkoutExercise")
+
+    const dbEntity = await WorkoutExercise.findOne({
+      where: { exercise, workout },
+    })
+
+    expect(dbEntity).toBeDefined()
+    expect(dbEntity?.maxReps).toBe(15)
+    expect(dbEntity?.sets).toBe(4)
+    expect(dbEntity?.minReps).toBe(8)
   })
 
   it("remove invalid exercise from workout", async () => {

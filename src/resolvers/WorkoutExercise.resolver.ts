@@ -103,9 +103,9 @@ export class WorkoutExerciseResolver {
 
     if (repSetValidation) return repSetValidation
 
-    workoutExercise.sets = sets
-    workoutExercise.minReps = minReps
-    workoutExercise.maxReps = maxReps
+    if (!!sets) workoutExercise.sets = sets
+    if (!!minReps) workoutExercise.minReps = minReps
+    if (!!maxReps) workoutExercise.maxReps = maxReps
 
     const res = workoutExercise.save()
 
