@@ -1,9 +1,11 @@
 import type { NextPage } from "next"
 import { gql, useMutation } from "@apollo/client"
-import { parse } from "cookie"
-import client from "../client"
+import { useState } from "react"
+import { observer } from "mobx-react"
+import { useStore } from "../store"
+import { Register, RegisterVariables } from "../__generated__/Register"
 
-const REGISTER = gql`
+const REGISTER_MUTATION = gql`
   mutation Register($email: String!, $password: String!) {
     register(email: $email, password: $password) {
       __typename
@@ -11,7 +13,7 @@ const REGISTER = gql`
   }
 `
 
-const LOGIN = gql`
+const LOGIN_MUTATION = gql`
   mutation Login($email: String!, $password: String!) {
     login(email: $email, password: $password) {
       __typename
@@ -19,56 +21,51 @@ const LOGIN = gql`
   }
 `
 
-const Home: NextPage = () => {
-  const [register, { data, loading, error }] = useMutation(LOGIN)
+const Home: NextPage = observer((props) => {
+  const [email, setEmail] = useState("")
+  const [password, setPassword] = useState("")
+
+  const [register, registerResult] = useMutation<Register, RegisterVariables>(
+    REGISTER_MUTATION,
+    {
+      variables: { email, password },
+    }
+  )
+
+  const [login, loginResult] = useMutation(LOGIN_MUTATION, {
+    variables: { email, password },
+  })
 
   return (
     <div>
-      <button
-        onClick={() =>
-          register({
-            variables: {
-              email: "test",
-              password: "test",
-            },
-          })
-        }
-      >
-        Register
-      </button>
-      <pre>{JSON.stringify(data, null, 2)}</pre>
+      <label>Email</label>
+      <br />
+      <input
+        type="text"
+        value={email}
+        onChange={(e: any) => setEmail(e.target.value)}
+      />
+      <br />
+
+      <label>Password</label>
+      <br />
+
+      <input
+        type="text"
+        value={password}
+        onChange={(e: any) => setPassword(e.target.value)}
+      />
+      <br />
+
+      <button onClick={() => register()}>Register</button>
+      <button onClick={() => login()}>Login</button>
+
+      <br />
+
+      <pre>{JSON.stringify(registerResult.data, null, 2)}</pre>
+      <pre>{JSON.stringify(loginResult.data, null, 2)}</pre>
     </div>
   )
-}
+})
 
 export default Home
-
-export async function getServerSideProps(context: any) {
-  const cookieHeaders = context.req.headers.cookie
-
-  console.log(cookieHeaders)
-
-  if (!cookieHeaders) return { props: {} }
-
-  const cookie = parse(cookieHeaders)["sid"]
-
-  const me: any = await client.query({
-    query: gql`
-      query Me {
-        me {
-          __typename
-          ... on User {
-            email
-          }
-        }
-      }
-    `,
-    context: {
-      headers: {
-        cookie: `sid=${cookie};`,
-      },
-    },
-  })
-
-  return { props: {} }
-}
