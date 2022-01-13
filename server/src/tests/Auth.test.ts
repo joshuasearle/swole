@@ -85,12 +85,12 @@ describe("Auth", () => {
     const data = registerResult.data?.["register"]
 
     expect(data.__typename).toBe("User")
-    expect(data.email).toBe(email)
+    expect(data.email).toBe(email.toLowerCase())
 
     const dbUser = await User.findOne({ where: { email: data.email } })
 
     expect(dbUser).toBeDefined()
-    expect(dbUser?.email).toBe(email)
+    expect(dbUser?.email).toBe(email.toLowerCase())
     expect(dbUser?.id).toBe(data.id)
   })
 
@@ -106,7 +106,7 @@ describe("Auth", () => {
     const data = registerResult.data?.["register"]
 
     expect(data.__typename).toBe("EmailAlreadyExists")
-    expect(data.email).toBe(email)
+    expect(data.email).toBe(email.toLowerCase())
   })
 
   it("login", async () => {
@@ -121,7 +121,7 @@ describe("Auth", () => {
     const data = result.data?.["login"]
 
     expect(data.__typename).toBe("User")
-    expect(data.email).toBe(email)
+    expect(data.email).toBe(email.toLowerCase())
   })
 
   it("login when already logged in", async () => {
@@ -166,7 +166,7 @@ describe("Auth", () => {
   })
 
   it("me", async () => {
-    const user = await User.findOne({ where: { email } })
+    const user = await User.findOne({ where: { email: email.toLowerCase() } })
 
     const result = await gCall({
       source: meQuery,
@@ -199,7 +199,7 @@ describe("Auth", () => {
   })
 
   it("delete self", async () => {
-    const user = await User.findOne({ where: { email } })
+    const user = await User.findOne({ where: { email: email.toLowerCase() } })
 
     const result = await gCall({
       source: deleteSelfMutation,

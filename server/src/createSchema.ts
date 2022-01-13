@@ -1,8 +1,8 @@
 import { buildSchema } from "type-graphql"
 import { ErrorInterceptor } from "./errors/errorHandler"
 
-export const createSchema = () =>
-  buildSchema({
+export const createSchema = () => {
+  return buildSchema({
     resolvers: [__dirname + "/**/*.resolver.ts"],
     globalMiddlewares: [ErrorInterceptor],
     authChecker: ({ context: { req } }) => {
@@ -10,3 +10,4 @@ export const createSchema = () =>
       return !!user
     },
   })
+}

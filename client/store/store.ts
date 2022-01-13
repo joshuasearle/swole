@@ -47,6 +47,7 @@ export function useStore(
   initialState: UserDataFragment | undefined = undefined
 ) {
   // Memoize the output of the function, and re-evaluate when dependencies change
+  // If initial state changes to undefined, the data will remain as the data is only hydrated if it is truthy
   const store = useMemo(() => initStore(initialState), [initialState])
   return store
 }
