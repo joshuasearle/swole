@@ -1,0 +1,37 @@
+fragment UserData on User {
+  id
+  email
+
+  exercises {
+    id
+    name
+    sets {
+      id
+    }
+  }
+
+  workouts {
+    id
+    name
+    workoutExercises {
+      id
+      sets
+      minReps
+      maxReps
+      exercise {
+        id
+      }
+    }
+  }
+
+  sets {
+    id
+    created
+    weight
+    reps
+    rpe
+    exercise {
+      id
+    }
+  }
+}

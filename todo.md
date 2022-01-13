@@ -13,3 +13,5 @@
 
 - Testing login and logout sessions
   - Not sure how to do it
+
+- remember me

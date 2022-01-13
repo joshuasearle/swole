@@ -1,6 +1,7 @@
-import { action, observable, computed, runInAction, makeObservable } from "mobx"
+import { action, observable, makeObservable } from "mobx"
 import { enableStaticRendering } from "mobx-react"
 import { useMemo } from "react"
+import { UserDataFragment } from "./generated/graphql"
 
 // Avoids memory leak in mobx when using SSR
 enableStaticRendering(typeof window === "undefined")
@@ -12,15 +13,18 @@ export class Store {
     makeObservable(this)
   }
 
-  @observable data: any = {}
+  @observable loggedIn: boolean = false
 
-  @action hydrate = (data: any) => {
-    if (!data) return
-    this.data = data
+  @observable userData: UserDataFragment | undefined
+
+  @action hydrate = (userData: UserDataFragment | undefined) => {
+    if (!userData) return
+    this.loggedIn = true
+    this.userData = userData
   }
 }
 
-function initStore(initialData = null) {
+function initStore(initialData: UserDataFragment | undefined = undefined) {
   const _store = store ?? new Store()
 
   // If page has ssr methods that use mobx store,
@@ -39,7 +43,9 @@ function initStore(initialData = null) {
   return _store
 }
 
-export function useStore(initialState: any) {
+export function useStore(
+  initialState: UserDataFragment | undefined = undefined
+) {
   // Memoize the output of the function, and re-evaluate when dependencies change
   const store = useMemo(() => initStore(initialState), [initialState])
   return store

@@ -122,11 +122,6 @@ export class WorkoutExerciseResolver {
 
     if (!user) false
 
-    try {
-    } catch (e) {
-      console.log(e)
-    }
-
     const [exercise, workout] = await Promise.all([
       Exercise.findOne({ where: { id: exerciseId, user } }),
       Workout.findOne({ where: { id: workoutId, user } }),
