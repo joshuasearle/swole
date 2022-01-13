@@ -6,8 +6,8 @@ import { parse } from "cookie"
 import { ServerResponse } from "http"
 import { NextPageContext } from "next"
 import App, { AppContext, AppInitialProps } from "next/app"
-import client from "./client"
-import { MeDocument, MeQuery } from "./generated/graphql"
+import client from "../client"
+import { MeDocument, MeQuery } from "../generated/graphql"
 
 async function setup(appContext: AppContext) {
   // Calls page's `getInitialProps` and fills `appProps.pageProps`

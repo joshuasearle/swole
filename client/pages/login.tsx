@@ -5,7 +5,7 @@ import { Dispatch, SetStateAction, MouseEvent } from "react"
 import { LoginMutation, useLoginMutation } from "../generated/graphql"
 import { useRouter } from "next/router"
 import { toast } from "react-toastify"
-import { useStore } from "../store"
+import { useStore } from "../store/store"
 import AuthPage from "../components/AuthPage"
 
 const LoginPage: NextPage = observer(() => {

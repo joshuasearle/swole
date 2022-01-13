@@ -1,7 +1,7 @@
 import { action, observable, makeObservable } from "mobx"
 import { enableStaticRendering } from "mobx-react"
 import { useMemo } from "react"
-import { UserDataFragment } from "./generated/graphql"
+import { UserDataFragment } from "../generated/graphql"
 
 // Avoids memory leak in mobx when using SSR
 enableStaticRendering(typeof window === "undefined")

@@ -2,11 +2,11 @@ import "../styles/globals.css"
 import type { AppProps } from "next/app"
 import { ApolloProvider } from "@apollo/client"
 import client from "../client"
-import { useStore } from "../store"
+import { useStore } from "../store/store"
 import { Provider } from "mobx-react"
 import { ToastContainer } from "react-toastify"
 import "../styles/toastify.css"
-import setup from "../setup"
+import setup from "../setup/setup"
 
 function MyApp({ Component, pageProps }: AppProps) {
   const store = useStore(pageProps?.userData)
