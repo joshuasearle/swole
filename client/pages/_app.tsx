@@ -6,7 +6,7 @@ import { useStore } from "../store/store"
 import { Provider } from "mobx-react"
 import { ToastContainer } from "react-toastify"
 import "../styles/toastify.css"
-import setup from "../setup/setup"
+import setup from "../setup/request"
 
 function MyApp({ Component, pageProps }: AppProps) {
   const store = useStore(pageProps?.userData)

@@ -47,7 +47,7 @@ async function setup(appContext: AppContext) {
     return redirectError(res, pathname)
   }
 
-  switch (response?.data.me.__typename) {
+  switch (response.data.me.__typename) {
     case "User":
       // If cookie is valid, and going to auth path, redirect home
       if (pathname === "/login" || pathname === "/register") {
@@ -59,7 +59,6 @@ async function setup(appContext: AppContext) {
         pageProps: { ...appProps.pageProps, userData: response.data.me },
       }
     case "NotLoggedIn":
-      return redirectAuth(res, pathname)
     default:
       return redirectAuth(res, pathname)
   }
