@@ -2,6 +2,7 @@ import {
   Arg,
   Ctx,
   FieldResolver,
+  Float,
   ID,
   Int,
   Mutation,
@@ -17,7 +18,9 @@ import CreateSetResult, {
 } from "../typedefs/CreateSetResult"
 import DeleteSetResult, { SetDeleteSuccess } from "../typedefs/DeleteSetResult"
 import { NotLoggedIn } from "../typedefs/shared"
+import { Weight } from "../typedefs/WeightEnum"
 import { Context } from "../types/Context"
+import { gramsToKg, gramsToLb, kgToGrams, lbToKg } from "./helpers/weights"
 
 @Resolver(() => Set)
 export class SetResolver {
@@ -25,9 +28,10 @@ export class SetResolver {
   async createSet(
     @Ctx() ctx: Context,
     @Arg("workoutExerciseId", () => ID) workoutExerciseId: string,
-    @Arg("weight", () => Int) weight: number,
+    @Arg("weight", () => Float) weight: number,
     @Arg("reps", () => Int) reps: number,
-    @Arg("rpe", () => Int) rpe: number
+    @Arg("rpe", () => Int) rpe: number,
+    @Arg("weightType", () => Weight) weightType: Weight
   ): Promise<typeof CreateSetResult> {
     const user = ctx.req.session.user
     if (!user) return new NotLoggedIn()
@@ -40,6 +44,12 @@ export class SetResolver {
     if (!workoutExercise) {
       return new WorkoutExerciseDoesNotExist({ id: workoutExerciseId })
     }
+
+    if (weightType === Weight.LB) {
+      weight = lbToKg(weight)
+    }
+
+    weight = kgToGrams(weight)
 
     const set = await Set.create({
       user,
@@ -57,9 +67,10 @@ export class SetResolver {
   async changeSet(
     @Ctx() ctx: Context,
     @Arg("id", () => ID) id: string,
-    @Arg("weight", () => Int, { nullable: true }) weight: number,
+    @Arg("weight", () => Float, { nullable: true }) weight: number,
     @Arg("reps", () => Int, { nullable: true }) reps: number,
-    @Arg("rpe", () => Int, { nullable: true }) rpe: number
+    @Arg("rpe", () => Int, { nullable: true }) rpe: number,
+    @Arg("weightType", () => Weight, { nullable: true }) weightType: Weight
   ): Promise<typeof ChangeSetResult> {
     const user = ctx.req.session.user
     if (!user) return new NotLoggedIn()
@@ -67,7 +78,14 @@ export class SetResolver {
     const set = await Set.findOne({ where: { id, user } })
     if (!set) return new SetDoesNotExist({ id })
 
-    if (!!weight) set.weight = weight
+    if (!!weight) {
+      if (weightType === Weight.LB) {
+        weight = lbToKg(weight)
+      }
+
+      weight = kgToGrams(weight)
+      set.weight = weight
+    }
     if (!!reps) set.reps = reps
     if (!!reps) set.rpe = rpe
 
@@ -110,5 +128,17 @@ export class SetResolver {
     })
 
     return joinedSet!.workoutExercise
+  }
+
+  @FieldResolver(() => Float)
+  async weight(
+    @Root() set: Set,
+    @Arg("weightType", () => Weight) weightType: Weight
+  ): Promise<number> {
+    if (weightType === Weight.LB) {
+      return gramsToLb(set.weight)
+    } else {
+      return gramsToKg(set.weight)
+    }
   }
 }

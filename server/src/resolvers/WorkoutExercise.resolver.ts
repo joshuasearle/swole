@@ -159,8 +159,6 @@ export class WorkoutExerciseResolver {
       relations: ["sets"],
     })
 
-    console.log(JSON.stringify(joinedWorkoutExercise!.sets, null, 2))
-
     return joinedWorkoutExercise!.sets
   }
 }

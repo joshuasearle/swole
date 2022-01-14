@@ -22,7 +22,7 @@ const setsThroughExercisesQuery = `
           sets {
             id
             created
-            weight
+            weight(weightType: KG)
             reps
             rpe
           }
@@ -39,7 +39,7 @@ const exercisesThroughSetsQuery = `
         sets {
           id
           created
-          weight
+          weight(weightType: KG)
           reps
           rpe
           exercise {
@@ -93,7 +93,7 @@ const setsThroughWorkouts = `
             sets {
               id
               created
-              weight
+              weight(weightType: KG)
               reps
               rpe
             }
@@ -305,8 +305,6 @@ describe("Me", () => {
     })
 
     const data = result.data?.["me"]
-
-    console.log(JSON.stringify(data, null, 2))
 
     data.workouts.forEach((workout: any) => {
       if (workout.name === "Upper Body") {

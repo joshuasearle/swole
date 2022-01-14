@@ -9,8 +9,6 @@
 
 - Create mutation that edits multiple workout exercises at once
 
-- Add kg vs lb
-
 - Testing login and logout sessions
   - Not sure how to do it
 
