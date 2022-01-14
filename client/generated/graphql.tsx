@@ -34,7 +34,7 @@ export type ChangeWorkoutNameResult = NotLoggedIn | Workout | WorkoutDoesNotExis
 
 export type CreateExerciseResult = DuplicateExerciseName | Exercise | NotLoggedIn;
 
-export type CreateSetResult = ExerciseDoesNotExist | NotLoggedIn | Set;
+export type CreateSetResult = NotLoggedIn | Set | WorkoutExerciseDoesNotExist;
 
 export type CreateWorkoutResult = DuplicateWorkoutName | NotLoggedIn | Workout;
 
@@ -181,10 +181,10 @@ export type MutationCreateExerciseArgs = {
 
 
 export type MutationCreateSetArgs = {
-  exerciseId: Scalars['ID'];
   reps: Scalars['Int'];
   rpe: Scalars['Int'];
   weight: Scalars['Int'];
+  workoutExerciseId: Scalars['ID'];
 };
 
 
@@ -252,6 +252,8 @@ export type Set = {
   reps: Scalars['Int'];
   rpe: Scalars['Int'];
   weight: Scalars['Int'];
+  workout: Workout;
+  workoutExercise: WorkoutExercise;
 };
 
 export type SetDeleteSuccess = {
@@ -297,6 +299,12 @@ export type WorkoutExercise = {
   maxReps: Scalars['Int'];
   minReps: Scalars['Int'];
   setCount: Scalars['Int'];
+  sets: Set;
+};
+
+export type WorkoutExerciseDoesNotExist = {
+  __typename?: 'WorkoutExerciseDoesNotExist';
+  id: Scalars['ID'];
 };
 
 export type UserDataFragment = { __typename?: 'User', id: string, email: string, exercises: Array<{ __typename?: 'Exercise', id: string, name: string, sets: Array<{ __typename?: 'Set', id: string }> }>, workouts: Array<{ __typename?: 'Workout', id: string, name: string, workoutExercises: Array<{ __typename?: 'WorkoutExercise', id: string, setCount: number, minReps: number, maxReps: number, exercise: { __typename?: 'Exercise', id: string } }> }>, sets: Array<{ __typename?: 'Set', id: string, created: any, weight: number, reps: number, rpe: number, exercise: { __typename?: 'Exercise', id: string } }> };
