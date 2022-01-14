@@ -141,7 +141,7 @@ export type MutationAddExerciseToWorkoutArgs = {
   exerciseId: Scalars['ID'];
   maxReps: Scalars['Int'];
   minReps: Scalars['Int'];
-  sets: Scalars['Int'];
+  setCount: Scalars['Int'];
   workoutId: Scalars['ID'];
 };
 
@@ -150,7 +150,7 @@ export type MutationChangeExerciseInWorkoutArgs = {
   exerciseId: Scalars['ID'];
   maxReps?: InputMaybe<Scalars['Int']>;
   minReps?: InputMaybe<Scalars['Int']>;
-  sets?: InputMaybe<Scalars['Int']>;
+  setCount?: InputMaybe<Scalars['Int']>;
   workoutId: Scalars['ID'];
 };
 
@@ -296,10 +296,10 @@ export type WorkoutExercise = {
   id: Scalars['ID'];
   maxReps: Scalars['Int'];
   minReps: Scalars['Int'];
-  sets: Scalars['Int'];
+  setCount: Scalars['Int'];
 };
 
-export type UserDataFragment = { __typename?: 'User', id: string, email: string, exercises: Array<{ __typename?: 'Exercise', id: string, name: string, sets: Array<{ __typename?: 'Set', id: string }> }>, workouts: Array<{ __typename?: 'Workout', id: string, name: string, workoutExercises: Array<{ __typename?: 'WorkoutExercise', id: string, sets: number, minReps: number, maxReps: number, exercise: { __typename?: 'Exercise', id: string } }> }>, sets: Array<{ __typename?: 'Set', id: string, created: any, weight: number, reps: number, rpe: number, exercise: { __typename?: 'Exercise', id: string } }> };
+export type UserDataFragment = { __typename?: 'User', id: string, email: string, exercises: Array<{ __typename?: 'Exercise', id: string, name: string, sets: Array<{ __typename?: 'Set', id: string }> }>, workouts: Array<{ __typename?: 'Workout', id: string, name: string, workoutExercises: Array<{ __typename?: 'WorkoutExercise', id: string, setCount: number, minReps: number, maxReps: number, exercise: { __typename?: 'Exercise', id: string } }> }>, sets: Array<{ __typename?: 'Set', id: string, created: any, weight: number, reps: number, rpe: number, exercise: { __typename?: 'Exercise', id: string } }> };
 
 export type LoginMutationVariables = Exact<{
   email: Scalars['String'];
@@ -307,7 +307,7 @@ export type LoginMutationVariables = Exact<{
 }>;
 
 
-export type LoginMutation = { __typename?: 'Mutation', login: { __typename: 'AlreadyLoggedIn' } | { __typename: 'InvalidLoginCredentials' } | { __typename: 'User', id: string, email: string, exercises: Array<{ __typename?: 'Exercise', id: string, name: string, sets: Array<{ __typename?: 'Set', id: string }> }>, workouts: Array<{ __typename?: 'Workout', id: string, name: string, workoutExercises: Array<{ __typename?: 'WorkoutExercise', id: string, sets: number, minReps: number, maxReps: number, exercise: { __typename?: 'Exercise', id: string } }> }>, sets: Array<{ __typename?: 'Set', id: string, created: any, weight: number, reps: number, rpe: number, exercise: { __typename?: 'Exercise', id: string } }> } };
+export type LoginMutation = { __typename?: 'Mutation', login: { __typename: 'AlreadyLoggedIn' } | { __typename: 'InvalidLoginCredentials' } | { __typename: 'User', id: string, email: string, exercises: Array<{ __typename?: 'Exercise', id: string, name: string, sets: Array<{ __typename?: 'Set', id: string }> }>, workouts: Array<{ __typename?: 'Workout', id: string, name: string, workoutExercises: Array<{ __typename?: 'WorkoutExercise', id: string, setCount: number, minReps: number, maxReps: number, exercise: { __typename?: 'Exercise', id: string } }> }>, sets: Array<{ __typename?: 'Set', id: string, created: any, weight: number, reps: number, rpe: number, exercise: { __typename?: 'Exercise', id: string } }> } };
 
 export type RegisterMutationVariables = Exact<{
   email: Scalars['String'];
@@ -320,7 +320,7 @@ export type RegisterMutation = { __typename?: 'Mutation', register: { __typename
 export type MeQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type MeQuery = { __typename?: 'Query', me: { __typename?: 'NotLoggedIn' } | { __typename?: 'User', id: string, email: string, exercises: Array<{ __typename?: 'Exercise', id: string, name: string, sets: Array<{ __typename?: 'Set', id: string }> }>, workouts: Array<{ __typename?: 'Workout', id: string, name: string, workoutExercises: Array<{ __typename?: 'WorkoutExercise', id: string, sets: number, minReps: number, maxReps: number, exercise: { __typename?: 'Exercise', id: string } }> }>, sets: Array<{ __typename?: 'Set', id: string, created: any, weight: number, reps: number, rpe: number, exercise: { __typename?: 'Exercise', id: string } }> } };
+export type MeQuery = { __typename?: 'Query', me: { __typename?: 'NotLoggedIn' } | { __typename?: 'User', id: string, email: string, exercises: Array<{ __typename?: 'Exercise', id: string, name: string, sets: Array<{ __typename?: 'Set', id: string }> }>, workouts: Array<{ __typename?: 'Workout', id: string, name: string, workoutExercises: Array<{ __typename?: 'WorkoutExercise', id: string, setCount: number, minReps: number, maxReps: number, exercise: { __typename?: 'Exercise', id: string } }> }>, sets: Array<{ __typename?: 'Set', id: string, created: any, weight: number, reps: number, rpe: number, exercise: { __typename?: 'Exercise', id: string } }> } };
 
 export const UserDataFragmentDoc = gql`
     fragment UserData on User {
@@ -338,7 +338,7 @@ export const UserDataFragmentDoc = gql`
     name
     workoutExercises {
       id
-      sets
+      setCount
       minReps
       maxReps
       exercise {
