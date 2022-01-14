@@ -91,7 +91,7 @@ beforeAll(async () => {
   const lowerBody = await Workout.create({ name: "Lower Body", user }).save()
   const fullBody = await Workout.create({ name: "Full Body", user }).save()
 
-  await WorkoutExercise.create({
+  const bu = await WorkoutExercise.create({
     exercise: benchPress,
     workout: upperBody,
     setCount: 5,
@@ -99,6 +99,7 @@ beforeAll(async () => {
     maxReps: 8,
   }).save()
 
+  // const pu =
   await WorkoutExercise.create({
     exercise: pullup,
     workout: upperBody,
@@ -107,7 +108,7 @@ beforeAll(async () => {
     maxReps: 8,
   }).save()
 
-  await WorkoutExercise.create({
+  const bf = await WorkoutExercise.create({
     exercise: benchPress,
     workout: fullBody,
     setCount: 5,
@@ -115,6 +116,7 @@ beforeAll(async () => {
     maxReps: 8,
   }).save()
 
+  // const pf =
   await WorkoutExercise.create({
     exercise: pullup,
     workout: fullBody,
@@ -123,7 +125,7 @@ beforeAll(async () => {
     maxReps: 8,
   }).save()
 
-  await WorkoutExercise.create({
+  const sf = await WorkoutExercise.create({
     exercise: squat,
     workout: fullBody,
     setCount: 5,
@@ -131,7 +133,7 @@ beforeAll(async () => {
     maxReps: 8,
   }).save()
 
-  await WorkoutExercise.create({
+  const sl = await WorkoutExercise.create({
     exercise: squat,
     workout: lowerBody,
     setCount: 5,
@@ -144,6 +146,8 @@ beforeAll(async () => {
     reps: 5,
     rpe: 8,
     exercise: benchPress,
+    workout: upperBody,
+    workoutExercise: bu,
     user,
   }).save()
 
@@ -152,6 +156,8 @@ beforeAll(async () => {
     reps: 5,
     rpe: 8,
     exercise: benchPress,
+    workout: fullBody,
+    workoutExercise: bf,
     user,
   }).save()
 
@@ -160,6 +166,8 @@ beforeAll(async () => {
     reps: 5,
     rpe: 8,
     exercise: benchPress,
+    workout: fullBody,
+    workoutExercise: bf,
     user,
   }).save()
 
@@ -168,6 +176,8 @@ beforeAll(async () => {
     reps: 5,
     rpe: 8,
     exercise: squat,
+    workout: fullBody,
+    workoutExercise: sf,
     user,
   }).save()
 
@@ -176,6 +186,8 @@ beforeAll(async () => {
     reps: 5,
     rpe: 8,
     exercise: squat,
+    workout: fullBody,
+    workoutExercise: sl,
     user,
   }).save()
 })

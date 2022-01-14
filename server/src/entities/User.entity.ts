@@ -15,29 +15,29 @@ import { Workout } from "./Workout.entity"
 export class User extends BaseEntity {
   @Field(() => ID)
   @PrimaryGeneratedColumn("uuid")
-  id: string
+  id!: string
 
   @Field(() => String)
   @Column("varchar", {
     length: 255,
     unique: true,
   })
-  email: string
+  email!: string
 
   @Column("varchar", {
     length: 255,
   })
-  password: string
+  password!: string
 
   @Field(() => [Exercise])
   @OneToMany(() => Exercise, (exercise) => exercise.user)
-  exercises: Exercise[]
+  exercises!: Exercise[]
 
   @Field(() => [Workout])
   @OneToMany(() => Workout, (workout) => workout.user)
-  workouts: Workout[]
+  workouts!: Workout[]
 
   @Field(() => [Set])
   @OneToMany(() => Set, (set) => set.user)
-  sets: Set[]
+  sets!: Set[]
 }

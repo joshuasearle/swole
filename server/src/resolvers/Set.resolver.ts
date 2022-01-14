@@ -10,9 +10,11 @@ import {
 } from "type-graphql"
 import { Exercise } from "../entities/Exercise.entity"
 import { Set } from "../entities/Set.entity"
+import { WorkoutExercise } from "../entities/WorkoutExercise.entity"
 import ChangeSetResult, { SetDoesNotExist } from "../typedefs/ChangeSetResult"
-import CreateSetResult from "../typedefs/CreateSetResult"
-import { ExerciseDoesNotExist } from "../typedefs/DeleteExerciseResult"
+import CreateSetResult, {
+  WorkoutExerciseDoesNotExist,
+} from "../typedefs/CreateSetResult"
 import DeleteSetResult, { SetDeleteSuccess } from "../typedefs/DeleteSetResult"
 import { NotLoggedIn } from "../typedefs/shared"
 import { Context } from "../types/Context"
@@ -22,7 +24,7 @@ export class SetResolver {
   @Mutation(() => CreateSetResult)
   async createSet(
     @Ctx() ctx: Context,
-    @Arg("exerciseId", () => ID) exerciseId: string,
+    @Arg("workoutExerciseId", () => ID) workoutExerciseId: string,
     @Arg("weight", () => Int) weight: number,
     @Arg("reps", () => Int) reps: number,
     @Arg("rpe", () => Int) rpe: number
@@ -30,10 +32,24 @@ export class SetResolver {
     const user = ctx.req.session.user
     if (!user) return new NotLoggedIn()
 
-    const exercise = await Exercise.findOne({ where: { id: exerciseId, user } })
-    if (!exercise) return new ExerciseDoesNotExist({ id: exerciseId })
+    const workoutExercise = await WorkoutExercise.findOne({
+      where: { id: workoutExerciseId },
+      relations: ["exercise", "workout"],
+    })
 
-    const set = await Set.create({ user, exercise, reps, rpe, weight }).save()
+    if (!workoutExercise) {
+      return new WorkoutExerciseDoesNotExist({ id: workoutExerciseId })
+    }
+
+    const set = await Set.create({
+      user,
+      workoutExercise,
+      exercise: workoutExercise.exercise,
+      workout: workoutExercise.workout,
+      reps,
+      rpe,
+      weight,
+    }).save()
     return set
   }
 
@@ -84,5 +100,15 @@ export class SetResolver {
     })
 
     return joinedSet!.exercise
+  }
+
+  @FieldResolver(() => WorkoutExercise)
+  async workoutExercise(@Root() set: Set): Promise<WorkoutExercise> {
+    const joinedSet = await Set.findOne({
+      where: { id: set.id },
+      relations: ["workoutExercise"],
+    })
+
+    return joinedSet!.workoutExercise
   }
 }

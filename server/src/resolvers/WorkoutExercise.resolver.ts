@@ -10,6 +10,7 @@ import {
 } from "type-graphql"
 import { Exercise } from "../entities/Exercise.entity"
 import { Workout } from "../entities/Workout.entity"
+import { Set } from "../entities/Set.entity"
 import { WorkoutExercise } from "../entities/WorkoutExercise.entity"
 import AddExerciseToWorkoutResult, {
   DuplicateWorkoutExercise,
@@ -149,5 +150,15 @@ export class WorkoutExerciseResolver {
     })
 
     return joinedWorkoutExercise!.exercise
+  }
+
+  @FieldResolver(() => Set)
+  async sets(@Root() workoutExercise: WorkoutExercise): Promise<Set> {
+    const joinedWorkoutExercise = await WorkoutExercise.findOne({
+      where: { id: workoutExercise.id },
+      relations: ["sets"],
+    })
+
+    return joinedWorkoutExercise!.sets
   }
 }

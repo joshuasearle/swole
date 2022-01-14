@@ -7,11 +7,15 @@ import { Exercise } from "../entities/Exercise.entity"
 import { Set } from "../entities/Set.entity"
 import { gCall } from "./utils/gCall"
 import { v4 } from "uuid"
+import { Workout } from "../entities/Workout.entity"
+import { WorkoutExercise } from "../entities/WorkoutExercise.entity"
 
 let conn: Connection
 let user: User
 let exercise: Exercise | undefined = undefined
+let workout: Workout | undefined = undefined
 let set: Set | undefined = undefined
+let workoutExercise: WorkoutExercise | undefined = undefined
 
 beforeAll(async () => {
   conn = await testConn()
@@ -25,6 +29,19 @@ beforeAll(async () => {
     name: faker.random.word(),
     user,
   }).save()
+
+  workout = await Workout.create({
+    name: faker.random.word(),
+    user,
+  }).save()
+
+  workoutExercise = await WorkoutExercise.create({
+    exercise,
+    workout,
+    setCount: 5,
+    minReps: 4,
+    maxReps: 6,
+  }).save()
 })
 
 afterAll(async () => {
@@ -32,8 +49,8 @@ afterAll(async () => {
 })
 
 const createSetMutation = `
-  mutation CreateSet($exerciseId: ID!, $weight: Int!, $reps: Int!, $rpe: Int!) {
-    createSet(exerciseId: $exerciseId, weight: $weight, reps: $reps, rpe: $rpe) {
+  mutation CreateSet($workoutExerciseId: ID!, $weight: Int!, $reps: Int!, $rpe: Int!) {
+    createSet(workoutExerciseId: $workoutExerciseId, weight: $weight, reps: $reps, rpe: $rpe) {
       __typename
       ...on Set {
         id
@@ -66,7 +83,7 @@ describe("Set", () => {
     const result = await gCall({
       source: createSetMutation,
       variableValues: {
-        exerciseId: exercise?.id,
+        workoutExerciseId: workoutExercise?.id,
         weight: 100,
         reps: 5,
         rpe: 8,
@@ -95,7 +112,7 @@ describe("Set", () => {
     const result = await gCall({
       source: createSetMutation,
       variableValues: {
-        exerciseId: v4(),
+        workoutExerciseId: v4(),
         weight: 100,
         reps: 5,
         rpe: 8,
@@ -105,7 +122,7 @@ describe("Set", () => {
 
     const data = result.data?.["createSet"]
 
-    expect(data.__typename).toBe("ExerciseDoesNotExist")
+    expect(data.__typename).toBe("WorkoutExerciseDoesNotExist")
   })
 
   it("change set", async () => {

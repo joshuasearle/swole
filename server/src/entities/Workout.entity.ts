@@ -8,6 +8,7 @@ import {
   PrimaryGeneratedColumn,
 } from "typeorm"
 import { User } from "./User.entity"
+import { Set } from "./Set.entity"
 import { WorkoutExercise } from "./WorkoutExercise.entity"
 
 @ObjectType()
@@ -15,22 +16,27 @@ import { WorkoutExercise } from "./WorkoutExercise.entity"
 export class Workout extends BaseEntity {
   @Field(() => ID)
   @PrimaryGeneratedColumn("uuid")
-  id: string
+  id!: string
 
   @Field(() => String)
   @Column("varchar", {
     length: 255,
     unique: true,
   })
-  name: string
+  name!: string
 
   @ManyToOne(() => User, (user) => user.workouts, { onDelete: "CASCADE" })
-  user: User
+  user!: User
 
   @Field(() => [WorkoutExercise])
   @OneToMany(
     () => WorkoutExercise,
     (workoutExercises) => workoutExercises.workout
   )
-  workoutExercises: WorkoutExercise[]
+  workoutExercises!: WorkoutExercise[]
+
+  @OneToMany(() => Set, (set) => set.workout, {
+    onDelete: "SET NULL",
+  })
+  sets!: Set[]
 }

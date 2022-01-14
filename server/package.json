@@ -7,7 +7,8 @@
     "dev": "ts-node-dev --respawn --transpile-only ./src/index.ts",
     "db:setup": "ts-node ./src/tests/utils/setup.ts",
     "test": "yarn db:setup && jest",
-    "schema": "ts-node-dev --transpile-only ./src/buildSchemaFile.ts "
+    "schema": "ts-node-dev --transpile-only ./src/buildSchemaFile.ts ",
+    "build": "tsc --outDir --skipLibCheck ./dist"
   },
   "dependencies": {
     "bcrypt": "^5.0.1",
