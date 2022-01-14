@@ -32,7 +32,7 @@ export class WorkoutExerciseResolver {
     @Ctx() ctx: Context,
     @Arg("exerciseId", () => ID) exerciseId: string,
     @Arg("workoutId", () => ID) workoutId: string,
-    @Arg("sets", () => Int) sets: number,
+    @Arg("setCount", () => Int) setCount: number,
     @Arg("minReps", () => Int) minReps: number,
     @Arg("maxReps", () => Int) maxReps: number
   ): Promise<typeof AddExerciseToWorkoutResult> {
@@ -56,14 +56,14 @@ export class WorkoutExerciseResolver {
       })
     }
 
-    const repSetValidation = validateRepsSets({ sets, minReps, maxReps })
+    const repSetValidation = validateRepsSets({ setCount, minReps, maxReps })
 
     if (repSetValidation) return repSetValidation
 
     const workoutExercise = await WorkoutExercise.create({
       exercise,
       workout,
-      sets,
+      setCount,
       minReps,
       maxReps,
     }).save()
@@ -76,7 +76,7 @@ export class WorkoutExerciseResolver {
     @Ctx() ctx: Context,
     @Arg("exerciseId", () => ID) exerciseId: string,
     @Arg("workoutId", () => ID) workoutId: string,
-    @Arg("sets", () => Int, { nullable: true }) sets: number,
+    @Arg("setCount", () => Int, { nullable: true }) setCount: number,
     @Arg("minReps", () => Int, { nullable: true }) minReps: number,
     @Arg("maxReps", () => Int, { nullable: true }) maxReps: number
   ): Promise<typeof ChangeExerciseInWorkoutResult> {
@@ -99,11 +99,11 @@ export class WorkoutExerciseResolver {
 
     if (!workoutExercise) return new ExerciseNotInWorkout({ exercise, workout })
 
-    const repSetValidation = validateRepsSets({ sets, minReps, maxReps })
+    const repSetValidation = validateRepsSets({ setCount, minReps, maxReps })
 
     if (repSetValidation) return repSetValidation
 
-    if (!!sets) workoutExercise.sets = sets
+    if (!!setCount) workoutExercise.setCount = setCount
     if (!!minReps) workoutExercise.minReps = minReps
     if (!!maxReps) workoutExercise.maxReps = maxReps
 

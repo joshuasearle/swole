@@ -157,7 +157,7 @@ describe("Exercise", () => {
     let wrkEx: WorkoutExercise | undefined = await WorkoutExercise.create({
       exercise: ex,
       workout: wrk,
-      sets: 5,
+      setCount: 5,
       minReps: 8,
       maxReps: 12,
     }).save()

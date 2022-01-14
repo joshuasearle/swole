@@ -61,7 +61,7 @@ const exercisesThroughWorkouts = `
           name
           workoutExercises {
             id
-            sets
+            setCount
             minReps
             maxReps
             exercise {
@@ -94,7 +94,7 @@ beforeAll(async () => {
   await WorkoutExercise.create({
     exercise: benchPress,
     workout: upperBody,
-    sets: 5,
+    setCount: 5,
     minReps: 3,
     maxReps: 8,
   }).save()
@@ -102,7 +102,7 @@ beforeAll(async () => {
   await WorkoutExercise.create({
     exercise: pullup,
     workout: upperBody,
-    sets: 5,
+    setCount: 5,
     minReps: 3,
     maxReps: 8,
   }).save()
@@ -110,7 +110,7 @@ beforeAll(async () => {
   await WorkoutExercise.create({
     exercise: benchPress,
     workout: fullBody,
-    sets: 5,
+    setCount: 5,
     minReps: 3,
     maxReps: 8,
   }).save()
@@ -118,7 +118,7 @@ beforeAll(async () => {
   await WorkoutExercise.create({
     exercise: pullup,
     workout: fullBody,
-    sets: 5,
+    setCount: 5,
     minReps: 3,
     maxReps: 8,
   }).save()
@@ -126,7 +126,7 @@ beforeAll(async () => {
   await WorkoutExercise.create({
     exercise: squat,
     workout: fullBody,
-    sets: 5,
+    setCount: 5,
     minReps: 3,
     maxReps: 8,
   }).save()
@@ -134,7 +134,7 @@ beforeAll(async () => {
   await WorkoutExercise.create({
     exercise: squat,
     workout: lowerBody,
-    sets: 5,
+    setCount: 5,
     minReps: 3,
     maxReps: 8,
   }).save()

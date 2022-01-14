@@ -9,6 +9,7 @@ import {
 } from "typeorm"
 import { Exercise } from "./Exercise.entity"
 import { User } from "./User.entity"
+// import { WorkoutExercise } from "./WorkoutExercise.entity"
 
 @ObjectType()
 @Entity()
@@ -38,6 +39,12 @@ export class Set extends BaseEntity {
     onDelete: "CASCADE",
   })
   exercise: Exercise
+
+  // @Field(() => WorkoutExercise)
+  // @ManyToOne(() => WorkoutExercise, (workoutExercise) => workoutExercise.sets, {
+  //   onDelete: "SET NULL",
+  // })
+  // workoutExercise: WorkoutExercise
 
   @ManyToOne(() => User, (user) => user.exercises, { onDelete: "CASCADE" })
   user: User

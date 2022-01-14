@@ -18,7 +18,7 @@ export class WorkoutExercise extends BaseEntity {
 
   @Field(() => Int)
   @Column("smallint")
-  sets: number
+  setCount: number
 
   @Field(() => Int)
   @Column("smallint")

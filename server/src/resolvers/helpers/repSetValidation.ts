@@ -4,15 +4,15 @@ import {
 } from "../../typedefs/AddExerciseToWorkoutResult"
 
 export const validateRepsSets = ({
-  sets,
+  setCount,
   minReps,
   maxReps,
 }: {
-  sets: number
+  setCount: number
   minReps: number
   maxReps: number
 }) => {
-  if (sets <= 0 && !!sets) {
+  if (setCount <= 0 && !!setCount) {
     return new InvalidSetAmount({ message: "Can't have less than one set" })
   }
 

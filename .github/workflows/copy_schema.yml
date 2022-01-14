@@ -20,8 +20,11 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
 
-      - name: Install packages
+      - name: Install packages (server)
         run: cd server && yarn install --frozen-lockfile
+
+      - name: Install packages (client)
+        run: cd client && yarn install --frozen-lockfile
 
       - name: Copy schema file
         run: cd server && yarn schema

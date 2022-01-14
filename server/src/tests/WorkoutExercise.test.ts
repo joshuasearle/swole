@@ -44,16 +44,16 @@ afterAll(async () => {
 })
 
 const addExerciseToWorkoutMutation = `
-  mutation AddExerciseToWorkout($exerciseId: ID!, $workoutId: ID!, $maxReps: Int!, $minReps: Int!, $sets: Int!) {
-    addExerciseToWorkout(exerciseId: $exerciseId, workoutId: $workoutId, maxReps: $maxReps, minReps: $minReps, sets: $sets) {
+  mutation AddExerciseToWorkout($exerciseId: ID!, $workoutId: ID!, $maxReps: Int!, $minReps: Int!, $setCount: Int!) {
+    addExerciseToWorkout(exerciseId: $exerciseId, workoutId: $workoutId, maxReps: $maxReps, minReps: $minReps, setCount: $setCount) {
       __typename
     }
   }
 `
 
 const changeExerciseInWorkout = `
-  mutation ChangeExerciseInWorkout($exerciseId: ID!, $workoutId: ID!, $maxReps: Int, $minReps: Int, $sets: Int) {
-    changeExerciseInWorkout(exerciseId: $exerciseId, workoutId: $workoutId, maxReps: $maxReps, minReps: $minReps, sets: $sets) {
+  mutation ChangeExerciseInWorkout($exerciseId: ID!, $workoutId: ID!, $maxReps: Int, $minReps: Int, $setCount: Int) {
+    changeExerciseInWorkout(exerciseId: $exerciseId, workoutId: $workoutId, maxReps: $maxReps, minReps: $minReps, setCount: $setCount) {
       __typename
     }
   }
@@ -76,7 +76,7 @@ describe("WorkoutExercise", () => {
         workoutId: workout.id,
         maxReps: 12,
         minReps: 8,
-        sets: -1,
+        setCount: -1,
       },
       user,
     })
@@ -94,7 +94,7 @@ describe("WorkoutExercise", () => {
         workoutId: workout.id,
         maxReps: 8,
         minReps: 12, // min > max should cause different result
-        sets: 5,
+        setCount: 5,
       },
       user,
     })
@@ -112,7 +112,7 @@ describe("WorkoutExercise", () => {
         workoutId: workout.id,
         maxReps: 12,
         minReps: 8,
-        sets: 5,
+        setCount: 5,
       },
       user,
     })
@@ -136,7 +136,7 @@ describe("WorkoutExercise", () => {
         workoutId: workout.id,
         maxReps: 12,
         minReps: 8,
-        sets: 5,
+        setCount: 5,
       },
       user,
     })
@@ -154,7 +154,7 @@ describe("WorkoutExercise", () => {
         workoutId: workout.id,
         maxReps: 12,
         minReps: 8,
-        sets: 4, // different set amount
+        setCount: 4, // different set amount
       },
       user,
     })
@@ -172,7 +172,7 @@ describe("WorkoutExercise", () => {
         workoutId: v4(),
         maxReps: 12,
         minReps: 8,
-        sets: 4, // different set amount
+        setCount: 4, // different set amount
       },
       user,
     })
@@ -190,7 +190,7 @@ describe("WorkoutExercise", () => {
         workoutId: workout.id,
         maxReps: 12,
         minReps: 8,
-        sets: 3, // different set amount
+        setCount: 3, // different set amount
       },
       user,
     })
@@ -208,7 +208,7 @@ describe("WorkoutExercise", () => {
         workoutId: workout.id,
         maxReps: 12,
         minReps: 8,
-        sets: 4, // different set amount
+        setCount: 4, // different set amount
       },
       user,
     })
@@ -222,7 +222,7 @@ describe("WorkoutExercise", () => {
     })
 
     expect(dbEntity).toBeDefined()
-    expect(dbEntity?.sets).toBe(4)
+    expect(dbEntity?.setCount).toBe(4)
   })
 
   it("change exercise in workout with one prop", async () => {
@@ -246,7 +246,7 @@ describe("WorkoutExercise", () => {
 
     expect(dbEntity).toBeDefined()
     expect(dbEntity?.maxReps).toBe(15)
-    expect(dbEntity?.sets).toBe(4)
+    expect(dbEntity?.setCount).toBe(4)
     expect(dbEntity?.minReps).toBe(8)
   })
 
