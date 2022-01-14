@@ -27,7 +27,7 @@ jobs:
         run: cd server && yarn schema
 
       - name: Generate types
-        run: cd server && yarn gen
+        run: cd client && yarn gen
 
       - name: Commit files
         run: |
