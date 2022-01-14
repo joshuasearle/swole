@@ -95,8 +95,8 @@ union LogoutResult = NotLoggedIn | User
 union MeResult = NotLoggedIn | User
 
 type Mutation {
-  addExerciseToWorkout(exerciseId: ID!, maxReps: Int!, minReps: Int!, sets: Int!, workoutId: ID!): AddExerciseToWorkoutResult!
-  changeExerciseInWorkout(exerciseId: ID!, maxReps: Int, minReps: Int, sets: Int, workoutId: ID!): ChangeExerciseInWorkoutResult!
+  addExerciseToWorkout(exerciseId: ID!, maxReps: Int!, minReps: Int!, setCount: Int!, workoutId: ID!): AddExerciseToWorkoutResult!
+  changeExerciseInWorkout(exerciseId: ID!, maxReps: Int, minReps: Int, setCount: Int, workoutId: ID!): ChangeExerciseInWorkoutResult!
   changeExerciseName(id: ID!, name: String!): ChangeExerciseNameResult!
   changeSet(id: ID!, reps: Int, rpe: Int, weight: Int): ChangeSetResult!
   changeWorkoutName(id: ID!, name: String!): ChangeWorkoutNameResult!
@@ -173,5 +173,5 @@ type WorkoutExercise {
   id: ID!
   maxReps: Int!
   minReps: Int!
-  sets: Int!
+  setCount: Int!
 }
