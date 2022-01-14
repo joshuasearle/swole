@@ -2,10 +2,12 @@ import { NextPage } from "next"
 
 import { observer } from "mobx-react"
 import { Dispatch, SetStateAction, MouseEvent } from "react"
-import { RegisterMutation, useRegisterMutation } from "../generated/graphql"
+import { useRegisterMutation } from "../generated/graphql"
 import { useRouter } from "next/router"
 import { toast } from "react-toastify"
 import AuthPage from "../components/AuthPage"
+import error from "../error/error"
+import { request } from "../client"
 
 const RegisterPage: NextPage = observer(() => {
   const router = useRouter()
@@ -17,16 +19,14 @@ const RegisterPage: NextPage = observer(() => {
     _: boolean,
     setError: Dispatch<SetStateAction<string>>
   ) => {
-    let data: RegisterMutation | null | undefined = null
+    const data = await request(
+      register({ variables: { email, password } }),
+      router
+    )
 
-    try {
-      const response = await register({ variables: { email, password } })
-      data = response.data
-    } catch (_) {
-      // If something goes wrong, leave `data` as null
-    }
+    if (!data) return
 
-    switch (data?.register.__typename) {
+    switch (data.register.__typename) {
       case "User":
         toast.success("Account created")
         await router.push("/login")
@@ -36,7 +36,7 @@ const RegisterPage: NextPage = observer(() => {
         toast.error("Email already in use")
         break
       default:
-        router.push("/error")
+        await error(router)
         break
     }
   }

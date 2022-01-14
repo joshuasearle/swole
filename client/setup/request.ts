@@ -3,7 +3,7 @@
 
 import { ApolloQueryResult } from "@apollo/client"
 import { parse } from "cookie"
-import { ServerResponse } from "http"
+import { IncomingMessage, ServerResponse } from "http"
 import { NextPageContext } from "next"
 import App, { AppContext, AppInitialProps } from "next/app"
 import client from "../client"
@@ -20,39 +20,20 @@ async function setup(appContext: AppContext) {
   if (!res || !req) return appProps
 
   // If going to error, skip everything
-  if (pathname === "/error") return appProps
+  if (isErrorPath(pathname)) return appProps
 
-  // Extract sid and redirect to `/login` if no cookie
-  const cookieHeaders = req.headers.cookie
-  if (!cookieHeaders) return redirectAuth(res, pathname)
+  // Extract sid
+  const sid = extractCookie(req)
+  if (!sid) return redirectAuth(res, pathname)
 
-  const cookie = parse(cookieHeaders)["sid"]
-  if (!cookie) return redirectAuth(res, pathname)
-
-  // Initialise response object
-  let response: ApolloQueryResult<MeQuery>
-
-  // Try to perform `Me` query to get User information
-  try {
-    response = await client.query<MeQuery>({
-      query: MeDocument,
-      context: {
-        headers: {
-          cookie: `sid=${cookie};`,
-        },
-      },
-    })
-  } catch (e) {
-    // If there is some error with the server, redirect to error
-    return redirectError(res, pathname)
-  }
+  // Request user data
+  const response = await requestMe(sid)
+  if (!response) return redirectError(res, pathname)
 
   switch (response.data.me.__typename) {
     case "User":
       // If cookie is valid, and going to auth path, redirect home
-      if (pathname === "/login" || pathname === "/register") {
-        return redirect(res, "/")
-      }
+      if (isAuthPath(pathname)) return redirect(res, "/")
       // If got a user, send userdata to component to add to mobx store on server-side pre-render
       return {
         ...appProps,
@@ -62,6 +43,33 @@ async function setup(appContext: AppContext) {
     default:
       return redirectAuth(res, pathname)
   }
+}
+
+function extractCookie(req: IncomingMessage): string | null {
+  const cookieHeaders = req.headers.cookie
+  if (!cookieHeaders) return null
+
+  const cookie = parse(cookieHeaders)["sid"]
+  if (!cookie) return null
+
+  return cookie
+}
+
+async function requestMe(sid: string) {
+  let response: ApolloQueryResult<MeQuery> | null = null
+  try {
+    response = await client.query<MeQuery>({
+      query: MeDocument,
+      context: {
+        headers: {
+          cookie: `sid=${sid};`,
+        },
+      },
+    })
+  } catch (e) {
+    // If there is some error with the server, leave response as null
+  }
+  return response
 }
 
 function redirect(res: ServerResponse, path: string) {
@@ -76,7 +84,7 @@ function redirectAuth(
   path: string = "/login"
 ) {
   // Don't re-redirect if already going to an auth path
-  if (current === "/login" || current === "/register") return {}
+  if (isAuthPath(current)) return {}
   // Also dont redirect if going to error path
   else if (current === "/error") return {}
   else return redirect(res, path)
@@ -84,8 +92,16 @@ function redirectAuth(
 
 function redirectError(res: ServerResponse, current: string) {
   // Don't re-redirect if already going to error path
-  if (current === "/error") return {}
+  if (isErrorPath(current)) return {}
   else return redirect(res, "/error")
+}
+
+function isAuthPath(current: string) {
+  return current === "/login" || current === "/register"
+}
+
+function isErrorPath(current: string) {
+  return current === "/error"
 }
 
 export default setup

@@ -2,11 +2,12 @@ import { NextPage } from "next"
 
 import { observer } from "mobx-react"
 import { Dispatch, SetStateAction, MouseEvent } from "react"
-import { LoginMutation, useLoginMutation } from "../generated/graphql"
+import { useLoginMutation } from "../generated/graphql"
 import { useRouter } from "next/router"
 import { toast } from "react-toastify"
 import { useStore } from "../store/store"
 import AuthPage from "../components/AuthPage"
+import { request } from "../client"
 
 const LoginPage: NextPage = observer(() => {
   const store = useStore()
@@ -19,16 +20,14 @@ const LoginPage: NextPage = observer(() => {
     _: boolean,
     setError: Dispatch<SetStateAction<string>>
   ) => {
-    let data: LoginMutation | null | undefined = null
+    const data = await request(
+      login({ variables: { email, password } }),
+      router
+    )
 
-    try {
-      const response = await login({ variables: { email, password } })
-      data = response.data
-    } catch (_) {
-      // If something goes wrong, leave `data` as null
-    }
+    if (!data) return
 
-    switch (data?.login.__typename) {
+    switch (data.login.__typename) {
       case "User":
         store.hydrate(data.login)
       case "AlreadyLoggedIn":
@@ -42,7 +41,7 @@ const LoginPage: NextPage = observer(() => {
         toast.error("Invalid login credentials")
         break
       default:
-        router.push("/error")
+        await router.push("/error")
         break
     }
   }
