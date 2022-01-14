@@ -152,12 +152,14 @@ export class WorkoutExerciseResolver {
     return joinedWorkoutExercise!.exercise
   }
 
-  @FieldResolver(() => Set)
-  async sets(@Root() workoutExercise: WorkoutExercise): Promise<Set> {
+  @FieldResolver(() => [Set])
+  async sets(@Root() workoutExercise: WorkoutExercise): Promise<Set[]> {
     const joinedWorkoutExercise = await WorkoutExercise.findOne({
       where: { id: workoutExercise.id },
       relations: ["sets"],
     })
+
+    console.log(JSON.stringify(joinedWorkoutExercise!.sets, null, 2))
 
     return joinedWorkoutExercise!.sets
   }

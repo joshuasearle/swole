@@ -209,7 +209,7 @@ describe("Auth", () => {
     const data = result.data?.["deleteSelf"]
     expect(data.__typename).toBe("DeleteSelfSuccess")
 
-    const noUser = await User.findOne({ where: { email } })
+    const noUser = await User.findOne({ where: { email: email.toLowerCase() } })
     expect(noUser).toBeUndefined()
   })
 })

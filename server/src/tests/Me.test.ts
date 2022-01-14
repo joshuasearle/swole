@@ -75,6 +75,35 @@ const exercisesThroughWorkouts = `
   }
 `
 
+const setsThroughWorkouts = `
+  {
+    me {
+      ...on User {
+        workouts {
+          id
+          name
+          workoutExercises {
+            exercise {
+              name
+            }
+            id
+            setCount
+            minReps
+            maxReps
+            sets {
+              id
+              created
+              weight
+              reps
+              rpe
+            }
+          }
+        }
+      }
+    }
+  }
+`
+
 beforeAll(async () => {
   conn = await testConn()
 
@@ -265,6 +294,45 @@ describe("Me", () => {
         expect(workout.workoutExercises.length).toBe(1)
       } else if (workout.name === "Full Body") {
         expect(workout.workoutExercises.length).toBe(3)
+      }
+    })
+  })
+
+  it("find sets through workouts", async () => {
+    const result = await gCall({
+      source: setsThroughWorkouts,
+      user,
+    })
+
+    const data = result.data?.["me"]
+
+    console.log(JSON.stringify(data, null, 2))
+
+    data.workouts.forEach((workout: any) => {
+      if (workout.name === "Upper Body") {
+        workout.workoutExercises.forEach((workoutExercises: any) => {
+          if (workoutExercises.exercise === "Bench Press") {
+            expect(workoutExercises.sets.length).toBe(1)
+          } else if (workoutExercises.exercise === "Pullup") {
+            expect(workoutExercises.sets.length).toBe(0)
+          }
+        })
+      } else if (workout.name === "Lower Body") {
+        workout.workoutExercises.forEach((workoutExercises: any) => {
+          if (workoutExercises.exercise === "Bench Press") {
+            expect(workoutExercises.sets.length).toBe(2)
+          } else if (workoutExercises.exercise === "Pullup") {
+            expect(workoutExercises.sets.length).toBe(0)
+          } else if (workoutExercises.exercise === "Squat") {
+            expect(workoutExercises.sets.length).toBe(1)
+          }
+        })
+      } else if (workout.name === "Full Body") {
+        workout.workoutExercises.forEach((workoutExercises: any) => {
+          if (workoutExercises.exercise === "Squat") {
+            expect(workoutExercises.sets.length).toBe(1)
+          }
+        })
       }
     })
   })

@@ -78,7 +78,10 @@ export class ExerciseResolver {
 
   @FieldResolver(() => [WorkoutExercise])
   async workoutExercises(@Root() workout: Workout): Promise<WorkoutExercise[]> {
-    const workoutExercises = await WorkoutExercise.find({ workout })
+    const workoutExercises = await WorkoutExercise.find({
+      where: { workout },
+    })
+
     return workoutExercises
   }
 }

@@ -41,9 +41,9 @@ export class WorkoutExercise extends BaseEntity {
   })
   exercise!: Exercise
 
-  @Field(() => Set)
+  @Field(() => [Set])
   @OneToMany(() => Set, (set) => set.workoutExercise, {
     onDelete: "SET NULL",
   })
-  sets!: Set
+  sets!: Set[]
 }
