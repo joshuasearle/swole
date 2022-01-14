@@ -19,7 +19,7 @@ union ChangeWorkoutNameResult = NotLoggedIn | Workout | WorkoutDoesNotExist
 
 union CreateExerciseResult = DuplicateExerciseName | Exercise | NotLoggedIn
 
-union CreateSetResult = ExerciseDoesNotExist | NotLoggedIn | Set
+union CreateSetResult = NotLoggedIn | Set | WorkoutExerciseDoesNotExist
 
 union CreateWorkoutResult = DuplicateWorkoutName | NotLoggedIn | Workout
 
@@ -101,7 +101,7 @@ type Mutation {
   changeSet(id: ID!, reps: Int, rpe: Int, weight: Int): ChangeSetResult!
   changeWorkoutName(id: ID!, name: String!): ChangeWorkoutNameResult!
   createExercise(name: String!): CreateExerciseResult!
-  createSet(exerciseId: ID!, reps: Int!, rpe: Int!, weight: Int!): CreateSetResult!
+  createSet(reps: Int!, rpe: Int!, weight: Int!, workoutExerciseId: ID!): CreateSetResult!
   createWorkout(name: String!): CreateWorkoutResult!
   deleteExercise(id: ID!): DeleteExerciseResult!
   deleteSelf: DeleteSelfResult!
@@ -136,6 +136,8 @@ type Set {
   reps: Int!
   rpe: Int!
   weight: Int!
+  workout: Workout!
+  workoutExercise: WorkoutExercise!
 }
 
 type SetDeleteSuccess {
@@ -174,4 +176,9 @@ type WorkoutExercise {
   maxReps: Int!
   minReps: Int!
   setCount: Int!
+  sets: Set!
+}
+
+type WorkoutExerciseDoesNotExist {
+  id: ID!
 }
