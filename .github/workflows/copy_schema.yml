@@ -26,6 +26,9 @@ jobs:
       - name: Copy schema file
         run: cd server && yarn schema
 
+      - name: Generate types
+        run: cd server && yarn gen
+
       - name: Commit files
         run: |
           git config --local user.email "action@github.com"
