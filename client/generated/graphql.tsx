@@ -299,7 +299,7 @@ export type WorkoutExercise = {
   maxReps: Scalars['Int'];
   minReps: Scalars['Int'];
   setCount: Scalars['Int'];
-  sets: Set;
+  sets: Array<Set>;
 };
 
 export type WorkoutExerciseDoesNotExist = {

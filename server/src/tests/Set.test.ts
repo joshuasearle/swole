@@ -48,8 +48,8 @@ afterAll(async () => {
 })
 
 const createSetMutation = `
-  mutation CreateSet($workoutExerciseId: ID!, $weight: Float!, $reps: Int!, $rpe: Int!, $weightType: Weight!) {
-    createSet(workoutExerciseId: $workoutExerciseId, weight: $weight, reps: $reps, rpe: $rpe, weightType: $weightType ) {
+  mutation CreateSet($workoutExerciseId: ID!, $weight: Int!, $reps: Int!, $rpe: Int!) {
+    createSet(workoutExerciseId: $workoutExerciseId, weight: $weight, reps: $reps, rpe: $rpe) {
       __typename
       ...on Set {
         id
@@ -59,8 +59,8 @@ const createSetMutation = `
 `
 
 const changeSetMutation = `
-  mutation CreateSet($id: ID!, $weight: Float, $reps: Int, $rpe: Int, $weightType: Weight) {
-    changeSet(id: $id, weight: $weight, reps: $reps, rpe: $rpe, weightType: $weightType) {
+  mutation ChangeSet($id: ID!, $weight: Int, $reps: Int, $rpe: Int) {
+    changeSet(id: $id, weight: $weight, reps: $reps, rpe: $rpe) {
       __typename
     }
   }
@@ -86,12 +86,9 @@ describe("Set", () => {
         weight: 100,
         reps: 5,
         rpe: 8,
-        weightType: "KG",
       },
       user,
     })
-
-    console.log(result)
 
     const data = result.data?.["createSet"]
 
@@ -103,7 +100,7 @@ describe("Set", () => {
     })
 
     expect(set).toBeDefined()
-    expect(set?.weight).toBe(100000)
+    expect(set?.weight).toBe(100)
     expect(set?.reps).toBe(5)
     expect(set?.rpe).toBe(8)
     expect(set?.exercise.id).toBe(exercise?.id)
@@ -118,7 +115,6 @@ describe("Set", () => {
         weight: 100,
         reps: 5,
         rpe: 8,
-        weightType: "KG",
       },
       user,
     })
@@ -144,7 +140,7 @@ describe("Set", () => {
 
     set = await Set.findOne({ where: { id: set?.id } })
 
-    expect(set?.weight).toBe(200000)
+    expect(set?.weight).toBe(200)
   })
 
   it("change invalid set", async () => {

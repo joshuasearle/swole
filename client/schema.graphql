@@ -176,7 +176,7 @@ type WorkoutExercise {
   maxReps: Int!
   minReps: Int!
   setCount: Int!
-  sets: Set!
+  sets: [Set!]!
 }
 
 type WorkoutExerciseDoesNotExist {

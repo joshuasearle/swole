@@ -22,7 +22,6 @@ const setsThroughExercisesQuery = `
           sets {
             id
             created
-            weight(weightType: KG)
             reps
             rpe
           }
@@ -39,7 +38,6 @@ const exercisesThroughSetsQuery = `
         sets {
           id
           created
-          weight(weightType: KG)
           reps
           rpe
           exercise {
@@ -93,7 +91,6 @@ const setsThroughWorkouts = `
             sets {
               id
               created
-              weight(weightType: KG)
               reps
               rpe
             }

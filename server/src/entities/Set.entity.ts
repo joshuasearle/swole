@@ -1,4 +1,4 @@
-import { Field, Float, ID, Int, ObjectType } from "type-graphql"
+import { Field, ID, Int, ObjectType } from "type-graphql"
 import {
   BaseEntity,
   Column,
@@ -23,7 +23,8 @@ export class Set extends BaseEntity {
   @CreateDateColumn()
   created!: Date
 
-  @Field(() => Float)
+  // Weight in grams
+  @Field(() => Int)
   @Column("integer")
   weight!: number
 
