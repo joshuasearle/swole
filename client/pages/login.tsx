@@ -17,7 +17,6 @@ const LoginPage: NextPage = observer(() => {
   const submit = async (
     email: string,
     password: string,
-    _: boolean,
     setError: Dispatch<SetStateAction<string>>
   ) => {
     const data = await request(
