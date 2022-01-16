@@ -7,6 +7,9 @@ const Input: React.FC = () => {
   const strokeWidth = 1.5
   const svgClass = "h-8 w-8"
 
+  const navDimensions = { height: "h-20" }
+  const buttonDimensions = { height: "h-[4.5rem]", width: "w-[4.5rem]" }
+
   const menuItems = [
     {
       svg: (
@@ -119,19 +122,25 @@ const Input: React.FC = () => {
   return (
     <>
       {/* Same size div, but relative positioning so that view div can not go under navbar */}
-      <div className="w-full h-[4.5rem]"></div>
-      <div className="bg-white px-2 shadow-inner text-teal-700 fixed bottom-0 h-[4.5rem] border-t border-gray-300 w-full z-10 flex justify-between items-center">
+      <div className={`w-full ${navDimensions.height}`}></div>
+      <div
+        className={`bg-white px-2 shadow-inner text-teal-700 fixed bottom-0 ${navDimensions.height} border-t border-gray-300 w-full z-10 flex justify-between items-center`}
+      >
         {menuItems.map((item) => {
           return (
             <div
               key={item.label}
               onClick={() => router.push(item.path)}
-              className="flex flex-col items-center w-[4.5rem] h-[4.5rem] justify-center cursor-pointer"
+              className={`flex flex-col items-center ${buttonDimensions.width} ${buttonDimensions.height} justify-center cursor-pointer`}
             >
               {item.path === router.pathname ? (
-                <div className="animate-fade-in delay-500 bg-teal-700 opacity-20 absolute w-[4.5rem] h-[4.5rem] rounded-full"></div>
+                <div
+                  className={`animate-fade-in delay-500 bg-teal-700 opacity-20 absolute ${buttonDimensions.width} ${buttonDimensions.height} rounded-full`}
+                ></div>
               ) : (
-                <div className="transform transition duration-500 hover:scale-100 scale-75 hover:bg-teal-700 opacity-20 absolute w-[4.5rem] h-[4.5rem] rounded-full"></div>
+                <div
+                  className={`transform transition duration-500 hover:scale-100 scale-75 hover:bg-teal-700 opacity-20 absolute ${buttonDimensions.width} ${buttonDimensions.height} rounded-full`}
+                ></div>
               )}
               {item.svg}
               <label className="text-xs text-center font-semibold">
