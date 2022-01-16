@@ -12,8 +12,8 @@
   --toastify-icon-color-error: var(--toastify-color-error);
   --toastify-toast-width: 320px;
   --toastify-toast-background: #fff;
-  --toastify-toast-min-height: 64px;
-  --toastify-toast-max-height: 800px;
+  --toastify-toast-min-height: 64px; /* edited */
+  --toastify-toast-max-height: 64px;
   --toastify-font-family: "Inter" sans-serif;
   --toastify-z-index: 9999;
   --toastify-text-color-light: #374151; /* edited */
@@ -101,13 +101,14 @@
   }
 }
 .Toastify__toast {
+  border: 1px solid rgb(209, 213, 219);
   position: relative;
   min-height: var(--toastify-toast-min-height);
   box-sizing: border-box;
   margin-bottom: 1rem;
   padding: 8px 20px; /* edited */
   border-radius: 4px;
-  box-shadow: 0 1px 10px 0 rgba(0, 0, 0, 0.1), 0 2px 15px 0 rgba(0, 0, 0, 0.05);
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
   display: -ms-flexbox;
   display: flex;
   -ms-flex-pack: justify;
@@ -132,6 +133,7 @@
   -ms-flex-align: center;
   align-items: center;
 }
+
 .Toastify__toast-body > div:last-child {
   -ms-flex: 1;
   flex: 1;

@@ -307,6 +307,8 @@ export type WorkoutExerciseDoesNotExist = {
   id: Scalars['ID'];
 };
 
+export type ExerciseFragment = { __typename?: 'Exercise', id: string, name: string, sets: Array<{ __typename?: 'Set', id: string }> };
+
 export type UserDataFragment = { __typename?: 'User', id: string, email: string, exercises: Array<{ __typename?: 'Exercise', id: string, name: string, sets: Array<{ __typename?: 'Set', id: string }> }>, workouts: Array<{ __typename?: 'Workout', id: string, name: string, workoutExercises: Array<{ __typename?: 'WorkoutExercise', id: string, setCount: number, minReps: number, maxReps: number, exercise: { __typename?: 'Exercise', id: string } }> }>, sets: Array<{ __typename?: 'Set', id: string, created: any, weight: number, reps: number, rpe: number, exercise: { __typename?: 'Exercise', id: string } }> };
 
 export type LoginMutationVariables = Exact<{
@@ -330,16 +332,21 @@ export type MeQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type MeQuery = { __typename?: 'Query', me: { __typename?: 'NotLoggedIn' } | { __typename?: 'User', id: string, email: string, exercises: Array<{ __typename?: 'Exercise', id: string, name: string, sets: Array<{ __typename?: 'Set', id: string }> }>, workouts: Array<{ __typename?: 'Workout', id: string, name: string, workoutExercises: Array<{ __typename?: 'WorkoutExercise', id: string, setCount: number, minReps: number, maxReps: number, exercise: { __typename?: 'Exercise', id: string } }> }>, sets: Array<{ __typename?: 'Set', id: string, created: any, weight: number, reps: number, rpe: number, exercise: { __typename?: 'Exercise', id: string } }> } };
 
+export const ExerciseFragmentDoc = gql`
+    fragment Exercise on Exercise {
+  id
+  name
+  sets {
+    id
+  }
+}
+    `;
 export const UserDataFragmentDoc = gql`
     fragment UserData on User {
   id
   email
   exercises {
-    id
-    name
-    sets {
-      id
-    }
+    ...Exercise
   }
   workouts {
     id
@@ -365,7 +372,7 @@ export const UserDataFragmentDoc = gql`
     }
   }
 }
-    `;
+    ${ExerciseFragmentDoc}`;
 export const LoginDocument = gql`
     mutation Login($email: String!, $password: String!) {
   login(email: $email, password: $password) {

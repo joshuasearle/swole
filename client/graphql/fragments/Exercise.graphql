@@ -1,0 +1,7 @@
+fragment Exercise on Exercise {
+  id
+  name
+  sets {
+    id
+  }
+}

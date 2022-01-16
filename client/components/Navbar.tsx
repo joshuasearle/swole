@@ -121,7 +121,7 @@ const Navbar: React.FC = () => {
       {/* Same size div, but relative positioning so that view div can not go under navbar */}
       <div className={`w-full ${navDimensions.height}`}></div>
       <div
-        className={`bg-white px-2 shadow-inner text-teal-700 fixed bottom-0 ${navDimensions.height} border-t border-gray-300 w-full z-10 flex justify-between items-center`}
+        className={`bg-white px-2 shadow-inner text-gray-700 fixed bottom-0 ${navDimensions.height} border-t border-gray-300 w-full z-10 flex justify-between items-center`}
       >
         {menuItems.map((item) => {
           return <NavItem key={item.label} item={item} />

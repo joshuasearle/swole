@@ -9,6 +9,7 @@ import {
 } from "react"
 import { useRouter } from "next/router"
 import { useStore } from "../store/store"
+import PageTitle from "./PageTitle"
 
 interface AuthPageProps {
   submit: (
@@ -36,13 +37,11 @@ const AuthPage: React.FC<AuthPageProps> = observer(
     }, [])
 
     return (
-      <div className="p-6">
-        <h1 className="text-center text-2xl font-bold text-gray-900">
-          {title}
-        </h1>
+      <div className="h-full flex flex-col">
+        <PageTitle title={title} />
         {description}
         {/* Form elements */}
-        <div className="mt-6 space-y-6">
+        <div className="mt-6 space-y-6 p-6 bg-white m-6 rounded-md shadow-sm border border-gray-300">
           <Input
             value={email}
             onChange={(e) => setEmail(e.target.value)}
@@ -58,7 +57,7 @@ const AuthPage: React.FC<AuthPageProps> = observer(
           <div className="flex items-center">
             <input
               type="checkbox"
-              className="h-4 w-4 text-teal-700 focus:ring-teal-700 border-gray-300 rounded"
+              className="h-4 w-4 text-gray-700 focus:ring-teal-700 border-gray-300 rounded"
               checked={showPassword}
               onChange={() => setShowPassword(!showPassword)} // Toggle
             />

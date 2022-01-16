@@ -18,14 +18,14 @@ function MyApp({ Component, pageProps }: AppProps) {
     <Provider store={store}>
       <ApolloProvider client={client}>
         <ToastContainer
-          position="bottom-center"
-          autoClose={4000}
+          position="top-center"
+          autoClose={10000}
           hideProgressBar={true}
         />
         {/* div that takes up the entire screen */}
         <div className="h-screen w-full flex flex-col">
           {/* div that grows when parent div grows */}
-          <div className="h-full w-full flex-grow-1">
+          <div className="h-full w-full flex-grow-1 bg-gray-100">
             <Component {...pageProps} />
           </div>
           {/* If path is not auth path, navbar that stays constant size */}

@@ -51,12 +51,12 @@ const LoginPage: NextPage = observer(() => {
   }
 
   const description = (
-    <p className="mt-2 text-center text-sm text-gray-600">
+    <p className="mt-2 text-center text-sm text-gray-700">
       {"or "} {/* Hard coded space here */}
       <a
         href="/register"
         onClick={onClick}
-        className="font-medium text-teal-700 hover:text-teal-700"
+        className="font-medium text-gray-700 hover:text-gray-700"
       >
         sign up for free
       </a>

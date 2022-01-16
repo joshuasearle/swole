@@ -3,11 +3,7 @@ fragment UserData on User {
   email
 
   exercises {
-    id
-    name
-    sets {
-      id
-    }
+    ...Exercise
   }
 
   workouts {

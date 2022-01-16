@@ -51,7 +51,7 @@ const RegisterPage: NextPage = observer(() => {
       <a
         href="/login"
         onClick={onClick}
-        className="font-medium text-teal-700 hover:text-teal-700"
+        className="font-medium text-gray-700 hover:text-gray-700"
       >
         sign in here
       </a>
