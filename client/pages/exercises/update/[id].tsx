@@ -6,7 +6,7 @@ import { useStore } from "../../../store/store"
 import error from "../../../error/error"
 import { ExerciseFragment } from "../../../generated/graphql"
 
-const CreateExercise: NextPage = observer((props) => {
+const UpdateExercise: NextPage = observer((props) => {
   const router = useRouter()
   const store = useStore()
   const [exercise, setExercise] = useState<null | ExerciseFragment>(null)
@@ -33,4 +33,4 @@ const CreateExercise: NextPage = observer((props) => {
   return <div>{JSON.stringify(exercise)}</div>
 })
 
-export default CreateExercise
+export default UpdateExercise
