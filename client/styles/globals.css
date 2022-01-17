@@ -1,3 +1,17 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+/* 
+body,
+html,
+#__next {
+  @apply h-full;
+}
+
+body {
+  @apply bg-gray-100;
+} */
+
+svg path {
+  stroke-width: 1.5;
+}

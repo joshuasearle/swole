@@ -1,0 +1,8 @@
+mutation CreateExercise($name: String!) {
+  createExercise(name: $name) {
+    __typename
+    ... on Exercise {
+      ...Exercise
+    }
+  }
+}

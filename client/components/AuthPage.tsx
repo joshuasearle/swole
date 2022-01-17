@@ -57,7 +57,7 @@ const AuthPage: React.FC<AuthPageProps> = observer(
           <div className="flex items-center">
             <input
               type="checkbox"
-              className="h-4 w-4 text-gray-700 focus:ring-teal-700 border-gray-300 rounded"
+              className="h-4 w-4 text-teal-700 focus:ring-teal-700 border border-gray-300 rounded shadow-sm"
               checked={showPassword}
               onChange={() => setShowPassword(!showPassword)} // Toggle
             />
@@ -68,7 +68,6 @@ const AuthPage: React.FC<AuthPageProps> = observer(
 
           <div>
             <button
-              type="submit"
               className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-teal-700 hover:bg-teal-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-800"
               onClick={() => submit(email, password, setError)}
             >

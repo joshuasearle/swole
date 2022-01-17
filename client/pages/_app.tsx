@@ -22,19 +22,12 @@ function MyApp({ Component, pageProps }: AppProps) {
           autoClose={10000}
           hideProgressBar={true}
         />
-        {/* div that takes up the entire screen */}
-        <div className="h-screen w-full flex flex-col">
-          {/* div that grows when parent div grows */}
-          <div className="h-full w-full flex-grow-1 bg-gray-100">
-            <Component {...pageProps} />
-          </div>
-          {/* If path is not auth path, navbar that stays constant size */}
-          {["/login", "/register"].includes(router.pathname) ? null : (
-            <div className="flex-grow-0">
-              <Navbar />
-            </div>
-          )}
-        </div>
+
+        <div className="fixed h-full w-full bg-gray-100 -z-50"></div>
+
+        <Component {...pageProps} />
+        {/* If path is not auth path, navbar that stays constant size */}
+        {["/login", "/register"].includes(router.pathname) ? null : <Navbar />}
       </ApolloProvider>
     </Provider>
   )

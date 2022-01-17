@@ -15,7 +15,7 @@ const Input: React.FC<InputProps> = ({ label, type, value, onChange }) => {
         <input
           type={type}
           autoComplete={type === "email" ? "email" : undefined}
-          className="appearance-none block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-teal-700 focus:border-teal-700 sm:text-sm"
+          className="text-gray-700 appearance-none block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-teal-700 focus:border-teal-700 sm:text-sm"
           value={value}
           onChange={onChange}
         />

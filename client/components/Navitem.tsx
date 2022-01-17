@@ -1,11 +1,11 @@
 import { useRouter } from "next/router"
-import React from "react"
+import React, { SVGProps } from "react"
 
 interface NavItemProps {
   item: {
     label: string
     path: string
-    svg: JSX.Element
+    icon: (props: SVGProps<SVGSVGElement>) => JSX.Element
   }
 }
 
@@ -34,7 +34,7 @@ const NavItem: React.FC<NavItemProps> = ({ item }) => {
           className={`transform transition duration-500 hover:scale-100 scale-75 hover:bg-gray-700 opacity-20 absolute ${buttonDimensions.width} ${buttonDimensions.height} rounded-full`}
         ></div>
       )}
-      {item.svg}
+      <item.icon className="h-8 w-8" />
       <label className="text-xs text-center font-semibold">{item.label}</label>
     </div>
   )

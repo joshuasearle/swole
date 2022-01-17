@@ -3,9 +3,10 @@ import { observer } from "mobx-react"
 import { useStore } from "../../store/store"
 import ExerciseItem from "../../components/ExerciseItem"
 import { UserDataFragment } from "../../generated/graphql"
-import { toast, useToast } from "react-toastify"
 import PageTitle from "../../components/PageTitle"
 import { useRouter } from "next/router"
+import { PlusSmIcon } from "@heroicons/react/outline"
+import { useMemo } from "react"
 
 interface ExercisesProps {
   userData?: UserDataFragment
@@ -21,32 +22,21 @@ const Exercises: NextPage<ExercisesProps> = observer((props) => {
 
       <div
         onClick={() => router.push("/exercises/create")}
-        className="p-[0.375rem] flex items-center justify-center text-gray-700 bg-white border border-gray-300 rounded-full shadow-sm mt-4"
+        className="overflow-auto p-[0.375rem] flex items-center justify-center text-gray-700 bg-white border border-gray-300 rounded-full shadow-sm mt-4"
       >
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          className="h-8 w-8"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={1.5}
-            d="M12 6v6m0 0v6m0-6h6m-6 0H6"
-          />
-        </svg>
+        <PlusSmIcon className="h-8 w-8" />
       </div>
 
       <label className="text-gray-700 font-semibold text-sm mt-2">
         Add exercise
       </label>
 
-      <div className="flex  flew-col space-y-6 w-full pt-6 h-full">
-        {store.userData?.exercises.map((exercise) => (
-          <ExerciseItem key={exercise.id} exercise={exercise} />
-        ))}
+      <div className="flex flex-col space-y-6 w-full p-6 pt-4 h-full">
+        {store.userData?.exercises.map((exercise) => {
+          if (!exercise) return null
+          return <ExerciseItem key={exercise.id} exercise={exercise} />
+        })}
+        <div className="h-[20vh]"></div>
       </div>
     </div>
   )
