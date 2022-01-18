@@ -1,7 +1,11 @@
 import { action, observable, makeObservable } from "mobx"
 import { enableStaticRendering } from "mobx-react"
 import { useMemo } from "react"
-import { ExerciseFragment, UserDataFragment } from "../generated/graphql"
+import {
+  ExerciseFragment,
+  UserDataFragment,
+  WorkoutFragment,
+} from "../generated/graphql"
 
 // Avoids memory leak in mobx when using SSR
 enableStaticRendering(typeof window === "undefined")
@@ -52,6 +56,46 @@ export class Store {
         return we.exercise.id !== exercise.id
       })
     })
+  }
+
+  @action updateExercise = (
+    exercise: ExerciseFragment,
+    updates: Partial<ExerciseFragment>
+  ) => {
+    if (!this.userData) return
+    const exerciseIndex = this.userData.exercises.findIndex(
+      (e) => e.id === exercise.id
+    )
+
+    if (exerciseIndex === -1) return
+
+    this.userData.exercises[exerciseIndex] = { ...exercise, ...updates }
+  }
+
+  @action getWorkoutById = (id: string) => {
+    if (!this.userData) return
+    return this.userData.workouts.find((w) => {
+      return w.id === id
+    })
+  }
+
+  @action addWorkout = (workout: WorkoutFragment) => {
+    if (!this.userData) return
+    this.userData!.workouts.push(workout)
+  }
+
+  @action updateWorkout = (
+    workout: WorkoutFragment,
+    updates: Partial<WorkoutFragment>
+  ) => {
+    if (!this.userData) return
+    const workoutIndex = this.userData.workouts.findIndex(
+      (w) => w.id === workout.id
+    )
+
+    if (workoutIndex === -1) return
+
+    this.userData.workouts[workoutIndex] = { ...workout, ...updates }
   }
 }
 

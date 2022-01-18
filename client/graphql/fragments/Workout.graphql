@@ -1,0 +1,13 @@
+fragment Workout on Workout {
+  id
+  name
+  workoutExercises {
+    id
+    setCount
+    minReps
+    maxReps
+    exercise {
+      id
+    }
+  }
+}

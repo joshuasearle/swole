@@ -1,0 +1,5 @@
+mutation EditWorkout($id: ID!, $name: String!) {
+  changeWorkoutName(id: $id, name: $name) {
+    __typename
+  }
+}

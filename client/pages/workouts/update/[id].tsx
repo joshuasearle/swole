@@ -5,22 +5,20 @@ import { useEffect, useState } from "react"
 import { useStore } from "../../../store/store"
 import error from "../../../error/error"
 import {
-  ExerciseFragment,
-  useEditExerciseMutation,
+  WorkoutFragment,
+  useEditWorkoutMutation,
 } from "../../../generated/graphql"
-import ExerciseEdit from "../../../components/NameEdit"
-import PageTitle from "../../../components/PageTitle"
 import { request } from "../../../client"
 import { toast } from "react-toastify"
 import OneFieldPage from "../../../components/OneFieldPage"
 
-const UpdateExercise: NextPage = observer((props) => {
+const UpdateWorkout: NextPage = observer((props) => {
   const router = useRouter()
   const store = useStore()
-  const [exercise, setExercise] = useState<null | ExerciseFragment>(null)
+  const [workout, setWorkout] = useState<null | WorkoutFragment>(null)
   const [errorMessage, setErrorMessage] = useState("")
 
-  const [editExercise] = useEditExerciseMutation()
+  const [editWorkout] = useEditWorkoutMutation()
 
   useEffect(() => {
     const { id } = router.query
@@ -29,33 +27,33 @@ const UpdateExercise: NextPage = observer((props) => {
       return
     }
 
-    const exercise = store.getExerciseById(id as string)
+    const workout = store.getWorkoutById(id as string)
 
-    if (!exercise) {
+    if (!workout) {
       error(router)
       return
     }
 
-    setExercise(exercise)
+    setWorkout(workout)
   }, [])
 
   const submit = async (name: string) => {
-    if (!exercise) return
+    if (!workout) return
 
     const data = await request(
-      editExercise({ variables: { id: exercise.id, name } }),
+      editWorkout({ variables: { id: workout.id, name } }),
       router
     )
     if (!data) return
 
-    switch (data.changeExerciseName.__typename) {
-      case "Exercise":
-        store.updateExercise(exercise, { name })
-        toast.success("Exercise updated")
-        router.replace("/exercises")
+    switch (data.changeWorkoutName.__typename) {
+      case "Workout":
+        store.updateWorkout(workout, { name })
+        toast.success("Workout updated")
+        router.replace(`/workouts/${workout.id}`)
         break
       case "NotLoggedIn":
-      case "ExerciseDoesNotExist":
+      case "WorkoutDoesNotExist":
       default:
         // Should all not be possible
         await error(router)
@@ -63,17 +61,18 @@ const UpdateExercise: NextPage = observer((props) => {
     }
   }
 
-  if (!exercise) return <div></div>
+  if (!workout) return <div></div>
 
   return (
     <OneFieldPage
-      label="Exercise Name"
-      buttonText="Update Exercise"
-      title="Update Exercise"
+      label="Workout Name"
+      buttonText="Update Workout"
+      title="Update Workout"
       submit={submit}
       errorMessage={errorMessage}
+      initial={workout.name}
     />
   )
 })
 
-export default UpdateExercise
+export default UpdateWorkout

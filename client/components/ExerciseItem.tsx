@@ -1,6 +1,7 @@
 import React from "react"
 import { ExerciseFragment } from "../generated/graphql"
 import ExercisePopover from "./ExercisePopover"
+import ListItem from "./ListItem"
 
 interface ExerciseItemProps {
   exercise: ExerciseFragment

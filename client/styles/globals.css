@@ -15,3 +15,7 @@ body {
 svg path {
   stroke-width: 1.5;
 }
+
+svg {
+  @apply text-gray-700;
+}

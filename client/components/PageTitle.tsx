@@ -20,7 +20,7 @@ const PageTitle: React.FC<PageTitleProps> = ({ title, backButton = false }) => {
             className="w-8 h-8 ml-4 absolute"
           />
         ) : null}
-        <h1 className="text-3xl font-semibold text-center text-gray-900 w-full">
+        <h1 className="px-14 text-3xl font-semibold text-center text-gray-900 w-full truncate text-ellipsis overflow-hidden">
           {title}
         </h1>
       </div>

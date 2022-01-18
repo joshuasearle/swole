@@ -1,7 +1,7 @@
 import type { NextPage } from "next"
 import { observer } from "mobx-react"
 import { useState } from "react"
-import { useCreateExerciseMutation } from "../../generated/graphql"
+import { useCreateWorkoutMutation } from "../../generated/graphql"
 import { request } from "../../client"
 import { useRouter } from "next/router"
 import error from "../../error/error"
@@ -14,20 +14,20 @@ const CreateExercise: NextPage = observer(() => {
   const router = useRouter()
   const store = useStore()
 
-  const [addExercise] = useCreateExerciseMutation()
+  const [addWorkout] = useCreateWorkoutMutation()
 
   const submit = async (name: string) => {
-    const data = await request(addExercise({ variables: { name } }), router)
+    const data = await request(addWorkout({ variables: { name } }), router)
     if (!data) return
 
-    switch (data.createExercise.__typename) {
-      case "Exercise":
-        store.addExercise(data.createExercise)
-        toast.success("Exercise created")
-        router.replace("/exercises")
+    switch (data.createWorkout.__typename) {
+      case "Workout":
+        store.addWorkout(data.createWorkout)
+        toast.success("Workout Created")
+        router.replace("/workouts")
         break
-      case "DuplicateExerciseName":
-        const message = "Duplicate exercise name"
+      case "DuplicateWorkoutName":
+        const message = "Duplicate workout name"
         toast.error(message)
         setErrorMessage(message)
         break
@@ -41,11 +41,11 @@ const CreateExercise: NextPage = observer(() => {
 
   return (
     <OneFieldPage
-      label="Exercise Name"
-      buttonText="Create Exercise"
-      title="Create Exercise"
       submit={submit}
+      title="Create Workout"
       errorMessage={errorMessage}
+      label="Workout Name"
+      buttonText="Create Workout"
     />
   )
 })

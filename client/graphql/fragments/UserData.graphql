@@ -7,17 +7,7 @@ fragment UserData on User {
   }
 
   workouts {
-    id
-    name
-    workoutExercises {
-      id
-      setCount
-      minReps
-      maxReps
-      exercise {
-        id
-      }
-    }
+    ...Workout
   }
 
   sets {
