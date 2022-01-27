@@ -110,7 +110,7 @@ describe("Exercise", () => {
       source: changeExerciseNameMutation,
       variableValues: {
         id: v4(), // invalid id
-        name: changedName,
+        name: changedName + "2",
       },
       user,
     })
