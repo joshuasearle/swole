@@ -3,22 +3,26 @@ import { observer } from "mobx-react"
 import { useRouter } from "next/router"
 import { useStore } from "../../store/store"
 import { useEffect, useState } from "react"
-import { WorkoutFragment } from "../../generated/graphql"
+import {
+  useDeleteWorkoutMutation,
+  WorkoutFragment,
+} from "../../generated/graphql"
 import error from "../../error/error"
 import PageTitle from "../../components/PageTitle"
 import { ChevronRightIcon, TrashIcon } from "@heroicons/react/outline"
-import DeleteWorkoutButton from "../../components/DeleteWorkoutButton"
+import DeleteWorkoutModal from "../../components/DeleteWorkoutModal"
 import Button from "../../components/Button"
+import { request } from "../../client"
+import { toast } from "react-toastify"
 
 const Workout: NextPage = observer(() => {
   const router = useRouter()
   const store = useStore()
   const [workout, setWorkout] = useState<null | WorkoutFragment>(null)
-  const [isOpen, setIsOpen] = useState<boolean>(true)
+  const [isOpen, setIsOpen] = useState<boolean>(false)
+  const [deleteWorkout] = useDeleteWorkoutMutation()
 
   useEffect(() => {
-    console.log(router.query)
-
     const { id } = router.query
     if (!id) {
       error(router)
@@ -35,6 +39,32 @@ const Workout: NextPage = observer(() => {
     setWorkout(workout)
   }, [])
 
+  const submit = async () => {
+    if (!workout) return
+
+    const data = await request(
+      deleteWorkout({ variables: { id: workout.id } }),
+      router
+    )
+
+    if (!data) return
+
+    switch (data.deleteWorkout.__typename) {
+      case "WorkoutDeleteSuccess":
+        toast.success("Workout deleted")
+        store.removeWorkout(workout)
+        setIsOpen(false)
+        router.replace("/workouts")
+        break
+      case "WorkoutDoesNotExist":
+      case "NotLoggedIn":
+      default:
+        await error(router)
+        setIsOpen(false)
+        break
+    }
+  }
+
   if (!workout) return <div></div>
 
   return (
@@ -48,15 +78,23 @@ const Workout: NextPage = observer(() => {
           <label>Edit workout name</label>
           <ChevronRightIcon className="w-6 h-6" />
         </div>
-        <Button onClick={() => setIsOpen(true)} type="orange">
+        <Button
+          onClick={() => {
+            setIsOpen(true)
+          }}
+          type="orange"
+        >
           <div className="flex flex-row items-center justify-center space-x-2">
             <TrashIcon className="w-6 h-6 text-white" />
             <label>Delete workout</label>
           </div>
         </Button>
-
-        <DeleteWorkoutButton isOpen={isOpen} setIsOpen={setIsOpen} />
       </div>
+      <DeleteWorkoutModal
+        isOpen={isOpen}
+        setIsOpen={setIsOpen}
+        submit={submit}
+      />
     </div>
   )
 })

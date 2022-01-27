@@ -41,13 +41,11 @@ export class Store {
 
   @action removeExercise = (exercise: ExerciseFragment) => {
     if (!this.userData) return
-    console.log(JSON.stringify(this.userData.exercises, null, 2))
 
     this.userData.exercises = this.userData.exercises.filter((ex) => {
       return ex.id !== exercise.id
     })
 
-    console.log(JSON.stringify(this.userData.exercises, null, 2))
     this.userData.sets = this.userData.sets.filter((set) => {
       return set.exercise.id !== exercise.id
     })
@@ -96,6 +94,26 @@ export class Store {
     if (workoutIndex === -1) return
 
     this.userData.workouts[workoutIndex] = { ...workout, ...updates }
+  }
+
+  @action workoutNameExists = (name: string) => {
+    if (!this.userData) return
+    return !!this.userData.workouts.find((workout) => workout.name === name)
+  }
+
+  @action exerciseNameExists = (name: string) => {
+    if (!this.userData) return
+    return !!this.userData.exercises.find((exercise) => exercise.name === name)
+  }
+
+  @action removeWorkout = (workout: WorkoutFragment) => {
+    // TODO: Make sure this removes the workout everywhere
+
+    if (!this.userData) return
+
+    this.userData.workouts = this.userData.workouts.filter((w) => {
+      return w.id !== workout.id
+    })
   }
 }
 

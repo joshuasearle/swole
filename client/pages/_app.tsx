@@ -9,6 +9,7 @@ import "../styles/toastify.css"
 import setup from "../setup/request"
 import Navbar from "../components/Navbar"
 import { useRouter } from "next/router"
+import Head from "next/head"
 
 function MyApp({ Component, pageProps }: AppProps) {
   const store = useStore(pageProps?.userData)
@@ -22,6 +23,10 @@ function MyApp({ Component, pageProps }: AppProps) {
           autoClose={4000}
           hideProgressBar={true}
         />
+
+        <Head>
+          <title>Swole | Fitness Tracker</title>
+        </Head>
 
         <div className="fixed h-full w-full bg-gray-100 -z-50"></div>
 

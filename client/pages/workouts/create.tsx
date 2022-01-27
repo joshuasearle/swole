@@ -24,7 +24,7 @@ const CreateExercise: NextPage = observer(() => {
       case "Workout":
         store.addWorkout(data.createWorkout)
         toast.success("Workout Created")
-        router.replace("/workouts")
+        router.back()
         break
       case "DuplicateWorkoutName":
         const message = "Duplicate workout name"

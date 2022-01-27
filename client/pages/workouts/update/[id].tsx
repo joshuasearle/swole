@@ -37,8 +37,16 @@ const UpdateWorkout: NextPage = observer((props) => {
     setWorkout(workout)
   }, [])
 
+  const duplicateWorkout = () => {
+    const errorMessage = "Duplicate workout name"
+    toast.error(errorMessage)
+    setErrorMessage(errorMessage)
+  }
+
   const submit = async (name: string) => {
     if (!workout) return
+
+    if (store.workoutNameExists(name)) return duplicateWorkout()
 
     const data = await request(
       editWorkout({ variables: { id: workout.id, name } }),
@@ -50,7 +58,11 @@ const UpdateWorkout: NextPage = observer((props) => {
       case "Workout":
         store.updateWorkout(workout, { name })
         toast.success("Workout updated")
-        router.replace(`/workouts/${workout.id}`)
+        router.back()
+
+        break
+      case "DuplicateWorkoutName":
+        duplicateWorkout()
         break
       case "NotLoggedIn":
       case "WorkoutDoesNotExist":

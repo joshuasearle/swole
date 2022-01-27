@@ -8,8 +8,6 @@ import {
   ExerciseFragment,
   useEditExerciseMutation,
 } from "../../../generated/graphql"
-import ExerciseEdit from "../../../components/NameEdit"
-import PageTitle from "../../../components/PageTitle"
 import { request } from "../../../client"
 import { toast } from "react-toastify"
 import OneFieldPage from "../../../components/OneFieldPage"
@@ -39,8 +37,16 @@ const UpdateExercise: NextPage = observer((props) => {
     setExercise(exercise)
   }, [])
 
+  const duplicateError = () => {
+    const errorMessage = "Duplicate exercise name"
+    toast.error(errorMessage)
+    setErrorMessage(errorMessage)
+  }
+
   const submit = async (name: string) => {
     if (!exercise) return
+
+    if (store.exerciseNameExists(name)) return duplicateError()
 
     const data = await request(
       editExercise({ variables: { id: exercise.id, name } }),
@@ -53,6 +59,9 @@ const UpdateExercise: NextPage = observer((props) => {
         store.updateExercise(exercise, { name })
         toast.success("Exercise updated")
         router.replace("/exercises")
+        break
+      case "DuplicateExerciseName":
+        duplicateError()
         break
       case "NotLoggedIn":
       case "ExerciseDoesNotExist":
@@ -72,6 +81,7 @@ const UpdateExercise: NextPage = observer((props) => {
       title="Update Exercise"
       submit={submit}
       errorMessage={errorMessage}
+      initial={exercise.name}
     />
   )
 })

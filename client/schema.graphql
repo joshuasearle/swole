@@ -11,11 +11,11 @@ type AlreadyLoggedIn {
 
 union ChangeExerciseInWorkoutResult = ExerciseDoesNotExist | ExerciseNotInWorkout | InvalidRepAmount | InvalidSetAmount | NotLoggedIn | WorkoutDoesNotExist | WorkoutExercise
 
-union ChangeExerciseNameResult = Exercise | ExerciseDoesNotExist | NotLoggedIn
+union ChangeExerciseNameResult = DuplicateExerciseName | Exercise | ExerciseDoesNotExist | NotLoggedIn
 
 union ChangeSetResult = NotLoggedIn | Set | SetDoesNotExist
 
-union ChangeWorkoutNameResult = NotLoggedIn | Workout | WorkoutDoesNotExist
+union ChangeWorkoutNameResult = DuplicateWorkoutName | NotLoggedIn | Workout | WorkoutDoesNotExist
 
 union CreateExerciseResult = DuplicateExerciseName | Exercise | NotLoggedIn
 

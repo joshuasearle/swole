@@ -14,7 +14,7 @@ const port = process.env["PORT"] || 4000
 
 const main = async () => {
   app.use(morgan("dev"))
-  app.use(cors({ credentials: true }))
+  app.use(cors({ credentials: true, origin: "http://localhost:3000" }))
 
   await createConnection()
   applySessionMiddleware(app)

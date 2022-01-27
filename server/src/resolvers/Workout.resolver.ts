@@ -47,7 +47,16 @@ export class ExerciseResolver {
     const user = ctx.req.session.user
     if (!user) return new NotLoggedIn()
 
-    const workout = await Workout.findOne({ where: { id: id, user } })
+    const workoutPromise = Workout.findOne({ where: { id: id, user } })
+
+    const nameClashWorkoutPromise = Workout.findOne({ where: { name } })
+
+    const [workout, nameClashWorkout] = await Promise.all([
+      workoutPromise,
+      nameClashWorkoutPromise,
+    ])
+
+    if (nameClashWorkout) return new DuplicateWorkoutName({ name })
 
     if (!workout) return new WorkoutDoesNotExist({ id: id })
     workout.name = name
