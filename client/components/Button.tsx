@@ -5,9 +5,15 @@ type ButtonColor = "teal" | "orange"
 interface ButtonProps {
   onClick: MouseEventHandler<HTMLButtonElement>
   type: ButtonColor
+  disabled?: boolean
 }
 
-const Button: React.FC<ButtonProps> = ({ onClick, type, children }) => {
+const Button: React.FC<ButtonProps> = ({
+  onClick,
+  type,
+  children,
+  disabled = false,
+}) => {
   const buttonRef = useRef<HTMLButtonElement>(null)
 
   let color, hoverColor, focusColor, ringColor
@@ -30,6 +36,7 @@ const Button: React.FC<ButtonProps> = ({ onClick, type, children }) => {
 
   return (
     <button
+      disabled={disabled}
       ref={buttonRef}
       className={`w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white ${color} ${hoverColor} focus:outline-none focus:ring-2 focus:ring-offset-2 ${focusColor} ${ringColor}`}
       onClick={(e) => onClick(e)}

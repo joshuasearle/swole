@@ -1,0 +1,10 @@
+fragment Set on Set {
+  id
+  created
+  weight
+  reps
+  rpe
+  exercise {
+    id
+  }
+}

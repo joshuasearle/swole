@@ -1,0 +1,18 @@
+mutation CreateSet(
+  $workoutExerciseId: ID!
+  $reps: Int!
+  $rpe: Int!
+  $weight: Int!
+) {
+  createSet(
+    workoutExerciseId: $workoutExerciseId
+    reps: $reps
+    rpe: $rpe
+    weight: $weight
+  ) {
+    __typename
+    ... on Set {
+      ...Set
+    }
+  }
+}

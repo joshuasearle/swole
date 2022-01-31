@@ -309,9 +309,24 @@ export type WorkoutExerciseDoesNotExist = {
 
 export type ExerciseFragment = { __typename?: 'Exercise', id: string, name: string, sets: Array<{ __typename?: 'Set', id: string }> };
 
+export type SetFragment = { __typename?: 'Set', id: string, created: any, weight: number, reps: number, rpe: number, exercise: { __typename?: 'Exercise', id: string } };
+
 export type UserDataFragment = { __typename?: 'User', id: string, email: string, exercises: Array<{ __typename?: 'Exercise', id: string, name: string, sets: Array<{ __typename?: 'Set', id: string }> }>, workouts: Array<{ __typename?: 'Workout', id: string, name: string, workoutExercises: Array<{ __typename?: 'WorkoutExercise', id: string, setCount: number, minReps: number, maxReps: number, exercise: { __typename?: 'Exercise', id: string } }> }>, sets: Array<{ __typename?: 'Set', id: string, created: any, weight: number, reps: number, rpe: number, exercise: { __typename?: 'Exercise', id: string } }> };
 
 export type WorkoutFragment = { __typename?: 'Workout', id: string, name: string, workoutExercises: Array<{ __typename?: 'WorkoutExercise', id: string, setCount: number, minReps: number, maxReps: number, exercise: { __typename?: 'Exercise', id: string } }> };
+
+export type WorkoutExerciseFragment = { __typename?: 'WorkoutExercise', id: string, setCount: number, minReps: number, maxReps: number, exercise: { __typename?: 'Exercise', id: string } };
+
+export type AddExerciseToWorkoutMutationVariables = Exact<{
+  workoutId: Scalars['ID'];
+  exerciseId: Scalars['ID'];
+  setCount: Scalars['Int'];
+  maxReps: Scalars['Int'];
+  minReps: Scalars['Int'];
+}>;
+
+
+export type AddExerciseToWorkoutMutation = { __typename?: 'Mutation', addExerciseToWorkout: { __typename: 'DuplicateWorkoutExercise' } | { __typename: 'InvalidRepAmount' } | { __typename: 'InvalidSetAmount' } | { __typename: 'NotLoggedIn' } | { __typename: 'WorkoutExercise', id: string, setCount: number, minReps: number, maxReps: number, exercise: { __typename?: 'Exercise', id: string } } };
 
 export type CreateExerciseMutationVariables = Exact<{
   name: Scalars['String'];
@@ -319,6 +334,16 @@ export type CreateExerciseMutationVariables = Exact<{
 
 
 export type CreateExerciseMutation = { __typename?: 'Mutation', createExercise: { __typename: 'DuplicateExerciseName' } | { __typename: 'Exercise', id: string, name: string, sets: Array<{ __typename?: 'Set', id: string }> } | { __typename: 'NotLoggedIn' } };
+
+export type CreateSetMutationVariables = Exact<{
+  workoutExerciseId: Scalars['ID'];
+  reps: Scalars['Int'];
+  rpe: Scalars['Int'];
+  weight: Scalars['Int'];
+}>;
+
+
+export type CreateSetMutation = { __typename?: 'Mutation', createSet: { __typename: 'NotLoggedIn' } | { __typename: 'Set', id: string, created: any, weight: number, reps: number, rpe: number, exercise: { __typename?: 'Exercise', id: string } } | { __typename: 'WorkoutExerciseDoesNotExist' } };
 
 export type CreateWorkoutMutationVariables = Exact<{
   name: Scalars['String'];
@@ -387,18 +412,35 @@ export const ExerciseFragmentDoc = gql`
   }
 }
     `;
+export const WorkoutExerciseFragmentDoc = gql`
+    fragment WorkoutExercise on WorkoutExercise {
+  id
+  setCount
+  minReps
+  maxReps
+  exercise {
+    id
+  }
+}
+    `;
 export const WorkoutFragmentDoc = gql`
     fragment Workout on Workout {
   id
   name
   workoutExercises {
+    ...WorkoutExercise
+  }
+}
+    ${WorkoutExerciseFragmentDoc}`;
+export const SetFragmentDoc = gql`
+    fragment Set on Set {
+  id
+  created
+  weight
+  reps
+  rpe
+  exercise {
     id
-    setCount
-    minReps
-    maxReps
-    exercise {
-      id
-    }
   }
 }
     `;
@@ -413,18 +455,58 @@ export const UserDataFragmentDoc = gql`
     ...Workout
   }
   sets {
-    id
-    created
-    weight
-    reps
-    rpe
-    exercise {
-      id
-    }
+    ...Set
   }
 }
     ${ExerciseFragmentDoc}
-${WorkoutFragmentDoc}`;
+${WorkoutFragmentDoc}
+${SetFragmentDoc}`;
+export const AddExerciseToWorkoutDocument = gql`
+    mutation AddExerciseToWorkout($workoutId: ID!, $exerciseId: ID!, $setCount: Int!, $maxReps: Int!, $minReps: Int!) {
+  addExerciseToWorkout(
+    workoutId: $workoutId
+    exerciseId: $exerciseId
+    setCount: $setCount
+    maxReps: $maxReps
+    minReps: $minReps
+  ) {
+    __typename
+    ... on WorkoutExercise {
+      ...WorkoutExercise
+    }
+  }
+}
+    ${WorkoutExerciseFragmentDoc}`;
+export type AddExerciseToWorkoutMutationFn = Apollo.MutationFunction<AddExerciseToWorkoutMutation, AddExerciseToWorkoutMutationVariables>;
+
+/**
+ * __useAddExerciseToWorkoutMutation__
+ *
+ * To run a mutation, you first call `useAddExerciseToWorkoutMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useAddExerciseToWorkoutMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [addExerciseToWorkoutMutation, { data, loading, error }] = useAddExerciseToWorkoutMutation({
+ *   variables: {
+ *      workoutId: // value for 'workoutId'
+ *      exerciseId: // value for 'exerciseId'
+ *      setCount: // value for 'setCount'
+ *      maxReps: // value for 'maxReps'
+ *      minReps: // value for 'minReps'
+ *   },
+ * });
+ */
+export function useAddExerciseToWorkoutMutation(baseOptions?: Apollo.MutationHookOptions<AddExerciseToWorkoutMutation, AddExerciseToWorkoutMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<AddExerciseToWorkoutMutation, AddExerciseToWorkoutMutationVariables>(AddExerciseToWorkoutDocument, options);
+      }
+export type AddExerciseToWorkoutMutationHookResult = ReturnType<typeof useAddExerciseToWorkoutMutation>;
+export type AddExerciseToWorkoutMutationResult = Apollo.MutationResult<AddExerciseToWorkoutMutation>;
+export type AddExerciseToWorkoutMutationOptions = Apollo.BaseMutationOptions<AddExerciseToWorkoutMutation, AddExerciseToWorkoutMutationVariables>;
 export const CreateExerciseDocument = gql`
     mutation CreateExercise($name: String!) {
   createExercise(name: $name) {
@@ -461,6 +543,50 @@ export function useCreateExerciseMutation(baseOptions?: Apollo.MutationHookOptio
 export type CreateExerciseMutationHookResult = ReturnType<typeof useCreateExerciseMutation>;
 export type CreateExerciseMutationResult = Apollo.MutationResult<CreateExerciseMutation>;
 export type CreateExerciseMutationOptions = Apollo.BaseMutationOptions<CreateExerciseMutation, CreateExerciseMutationVariables>;
+export const CreateSetDocument = gql`
+    mutation CreateSet($workoutExerciseId: ID!, $reps: Int!, $rpe: Int!, $weight: Int!) {
+  createSet(
+    workoutExerciseId: $workoutExerciseId
+    reps: $reps
+    rpe: $rpe
+    weight: $weight
+  ) {
+    __typename
+    ... on Set {
+      ...Set
+    }
+  }
+}
+    ${SetFragmentDoc}`;
+export type CreateSetMutationFn = Apollo.MutationFunction<CreateSetMutation, CreateSetMutationVariables>;
+
+/**
+ * __useCreateSetMutation__
+ *
+ * To run a mutation, you first call `useCreateSetMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateSetMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createSetMutation, { data, loading, error }] = useCreateSetMutation({
+ *   variables: {
+ *      workoutExerciseId: // value for 'workoutExerciseId'
+ *      reps: // value for 'reps'
+ *      rpe: // value for 'rpe'
+ *      weight: // value for 'weight'
+ *   },
+ * });
+ */
+export function useCreateSetMutation(baseOptions?: Apollo.MutationHookOptions<CreateSetMutation, CreateSetMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateSetMutation, CreateSetMutationVariables>(CreateSetDocument, options);
+      }
+export type CreateSetMutationHookResult = ReturnType<typeof useCreateSetMutation>;
+export type CreateSetMutationResult = Apollo.MutationResult<CreateSetMutation>;
+export type CreateSetMutationOptions = Apollo.BaseMutationOptions<CreateSetMutation, CreateSetMutationVariables>;
 export const CreateWorkoutDocument = gql`
     mutation CreateWorkout($name: String!) {
   createWorkout(name: $name) {

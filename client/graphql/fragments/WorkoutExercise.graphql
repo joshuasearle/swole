@@ -1,0 +1,9 @@
+fragment WorkoutExercise on WorkoutExercise {
+  id
+  setCount
+  minReps
+  maxReps
+  exercise {
+    id
+  }
+}

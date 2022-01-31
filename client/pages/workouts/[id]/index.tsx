@@ -1,19 +1,21 @@
 import type { NextPage } from "next"
 import { observer } from "mobx-react"
 import { useRouter } from "next/router"
-import { useStore } from "../../store/store"
+import { useStore } from "../../../store/store"
 import { useEffect, useState } from "react"
 import {
   useDeleteWorkoutMutation,
   WorkoutFragment,
-} from "../../generated/graphql"
-import error from "../../error/error"
-import PageTitle from "../../components/PageTitle"
+} from "../../../generated/graphql"
+import error from "../../../error/error"
+import PageTitle from "../../../components/PageTitle"
 import { ChevronRightIcon, TrashIcon } from "@heroicons/react/outline"
-import DeleteWorkoutModal from "../../components/DeleteWorkoutModal"
-import Button from "../../components/Button"
-import { request } from "../../client"
+import DeleteWorkoutModal from "../../../components/DeleteWorkoutModal"
+import Button from "../../../components/Button"
+import { request } from "../../../client"
 import { toast } from "react-toastify"
+import AddButton from "../../../components/AddButton"
+import WorkoutExerciseItem from "../../../components/WorkoutExerciseItem"
 
 const Workout: NextPage = observer(() => {
   const router = useRouter()
@@ -70,6 +72,21 @@ const Workout: NextPage = observer(() => {
   return (
     <div className="flex flex-col items-center w-full ">
       <PageTitle backButton={true} title={workout.name} />
+      <AddButton
+        label="Add exercise"
+        onClick={() => router.push(`/workouts/${workout.id}/exercises/create`)}
+      />
+      <div className="w-full p-6 pt-4 space-y-6">
+        {workout.workoutExercises.map((workoutExercise) => {
+          return (
+            <WorkoutExerciseItem
+              key={workoutExercise.id}
+              workoutExercise={workoutExercise}
+            />
+          )
+        })}
+      </div>
+
       <div className="p-6 w-full  space-y-6">
         <div
           onClick={() => router.push(`/workouts/update/${workout.id}`)}

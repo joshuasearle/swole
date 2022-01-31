@@ -11,13 +11,6 @@ fragment UserData on User {
   }
 
   sets {
-    id
-    created
-    weight
-    reps
-    rpe
-    exercise {
-      id
-    }
+    ...Set
   }
 }

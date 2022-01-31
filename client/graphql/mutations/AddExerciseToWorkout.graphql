@@ -1,0 +1,20 @@
+mutation AddExerciseToWorkout(
+  $workoutId: ID!
+  $exerciseId: ID!
+  $setCount: Int!
+  $maxReps: Int!
+  $minReps: Int!
+) {
+  addExerciseToWorkout(
+    workoutId: $workoutId
+    exerciseId: $exerciseId
+    setCount: $setCount
+    maxReps: $maxReps
+    minReps: $minReps
+  ) {
+    __typename
+    ... on WorkoutExercise {
+      ...WorkoutExercise
+    }
+  }
+}

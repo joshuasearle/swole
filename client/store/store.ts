@@ -4,8 +4,10 @@ import { useMemo } from "react"
 import {
   ExerciseFragment,
   UserDataFragment,
+  WorkoutExerciseFragment,
   WorkoutFragment,
 } from "../generated/graphql"
+import { UserDataMap } from "../types/UserDataMap"
 
 // Avoids memory leak in mobx when using SSR
 enableStaticRendering(typeof window === "undefined")
@@ -19,39 +21,74 @@ export class Store {
 
   @observable loggedIn: boolean = false
 
-  @observable userData: UserDataFragment | undefined
+  @observable userDataMap: UserDataMap | undefined
 
   @action hydrate = (userData: UserDataFragment | undefined) => {
     if (!userData) return
     this.loggedIn = true
-    this.userData = userData
+    this.userDataMap = {
+      exercises: {},
+      workouts: {},
+      workoutExercises: {},
+      sets: {},
+    }
+
+    userData.exercises.forEach((exercise) => {
+      this.userDataMap!.exercises[exercise.id] = exercise
+    })
+
+    userData.workouts.forEach((workout) => {
+      this.userDataMap!.workouts[workout.id] = workout
+
+      workout.workoutExercises.forEach((workoutExercise) => {
+        this.userDataMap!.workoutExercises[workoutExercise.id] = workoutExercise
+      })
+    })
+
+    userData.sets.forEach((set) => {
+      this.userDataMap!.sets[set.id] = set
+    })
   }
 
   @action getExerciseById = (id: string) => {
-    if (!this.userData) return
-    return this.userData.exercises.find((ex) => {
-      return ex.id === id
-    })
+    if (!this.userDataMap) return
+    return this.userDataMap.exercises[id]
   }
 
   @action addExercise = (exercise: ExerciseFragment) => {
-    if (!this.userData) return
-    this.userData!.exercises.push(exercise)
+    if (!this.userDataMap) return
+    this.userDataMap.exercises[exercise.id] = exercise
   }
 
   @action removeExercise = (exercise: ExerciseFragment) => {
-    if (!this.userData) return
+    if (!this.userDataMap) return
 
-    this.userData.exercises = this.userData.exercises.filter((ex) => {
-      return ex.id !== exercise.id
+    // Remove exercise itself
+    delete this.userDataMap.exercises[exercise.id]
+
+    // Remove sets with the exericse
+    Object.keys(this.userDataMap.sets).forEach((setId) => {
+      if (this.userDataMap!.sets[setId].exercise.id === exercise.id) {
+        delete this.userDataMap!.sets[setId]
+      }
     })
 
-    this.userData.sets = this.userData.sets.filter((set) => {
-      return set.exercise.id !== exercise.id
+    // Filter out workoutExercises that are of the deleted exercise
+    Object.keys(this.userDataMap.workouts).forEach((workoutId) => {
+      const workout = this.userDataMap!.workouts[workoutId]
+      this.userDataMap!.workouts[workoutId].workoutExercises =
+        workout.workoutExercises.filter((workoutExercise) => {
+          workoutExercise.exercise.id !== exercise.id
+        })
     })
-    this.userData.workouts.forEach((workout) => {
-      workout.workoutExercises = workout.workoutExercises.filter((we) => {
-        return we.exercise.id !== exercise.id
+
+    // Remove workout exercises from the map
+    Object.keys(this.userDataMap.workouts).forEach((workoutId) => {
+      const workout = this.userDataMap!.workouts[workoutId]
+      workout.workoutExercises.forEach((workoutExercise) => {
+        if (workoutExercise.exercise.id === exercise.id) {
+          delete this.userDataMap!.workoutExercises[workoutExercise.id]
+        }
       })
     })
   }
@@ -60,60 +97,73 @@ export class Store {
     exercise: ExerciseFragment,
     updates: Partial<ExerciseFragment>
   ) => {
-    if (!this.userData) return
-    const exerciseIndex = this.userData.exercises.findIndex(
-      (e) => e.id === exercise.id
-    )
+    if (!this.userDataMap) return
 
-    if (exerciseIndex === -1) return
-
-    this.userData.exercises[exerciseIndex] = { ...exercise, ...updates }
+    this.userDataMap.exercises[exercise.id] = {
+      ...this.userDataMap.exercises[exercise.id],
+      ...updates,
+    }
   }
 
   @action getWorkoutById = (id: string) => {
-    if (!this.userData) return
-    return this.userData.workouts.find((w) => {
-      return w.id === id
-    })
+    if (!this.userDataMap) return
+    return this.userDataMap.workouts[id]
   }
 
   @action addWorkout = (workout: WorkoutFragment) => {
-    if (!this.userData) return
-    this.userData!.workouts.push(workout)
+    if (!this.userDataMap) return
+    this.userDataMap.workouts[workout.id] = workout
   }
 
   @action updateWorkout = (
     workout: WorkoutFragment,
     updates: Partial<WorkoutFragment>
   ) => {
-    if (!this.userData) return
-    const workoutIndex = this.userData.workouts.findIndex(
-      (w) => w.id === workout.id
-    )
-
-    if (workoutIndex === -1) return
-
-    this.userData.workouts[workoutIndex] = { ...workout, ...updates }
+    if (!this.userDataMap) return
+    this.userDataMap.workouts[workout.id] = {
+      ...this.userDataMap.workouts[workout.id],
+      ...updates,
+    }
   }
 
   @action workoutNameExists = (name: string) => {
-    if (!this.userData) return
-    return !!this.userData.workouts.find((workout) => workout.name === name)
+    if (!this.userDataMap) return
+    return !!Object.keys(this.userDataMap.workouts).find((workoutId) => {
+      return this.userDataMap!.workouts[workoutId].name === name
+    })
   }
 
   @action exerciseNameExists = (name: string) => {
-    if (!this.userData) return
-    return !!this.userData.exercises.find((exercise) => exercise.name === name)
+    if (!this.userDataMap) return
+    return !!Object.keys(this.userDataMap.exercises).find((exerciseId) => {
+      return this.userDataMap!.exercises[exerciseId].name === name
+    })
   }
 
   @action removeWorkout = (workout: WorkoutFragment) => {
     // TODO: Make sure this removes the workout everywhere
 
-    if (!this.userData) return
+    if (!this.userDataMap) return
 
-    this.userData.workouts = this.userData.workouts.filter((w) => {
-      return w.id !== workout.id
+    delete this.userDataMap.workouts[workout.id]
+  }
+
+  @action getExerciseOptions = () => {
+    if (!this.userDataMap) return
+
+    return Object.keys(this.userDataMap.exercises).map((exerciseId) => {
+      const exercise = this.userDataMap!.exercises[exerciseId]
+      return { id: exerciseId, label: exercise.name }
     })
+  }
+
+  @action addWorkoutExercise = (
+    workout: WorkoutFragment,
+    workoutExercise: WorkoutExerciseFragment
+  ) => {
+    if (!this.userDataMap) return
+    this.userDataMap.workouts[workout.id].workoutExercises.push(workoutExercise)
+    this.userDataMap.workoutExercises[workoutExercise.id] = workoutExercise
   }
 }
 

@@ -3,8 +3,8 @@ import React, { ChangeEventHandler, HTMLInputTypeAttribute } from "react"
 interface InputProps {
   label: string
   type: HTMLInputTypeAttribute
-  value: string
-  onChange: ChangeEventHandler<HTMLInputElement>
+  value: any
+  onChange: ChangeEventHandler<any>
 }
 
 const Input: React.FC<InputProps> = ({ label, type, value, onChange }) => {
